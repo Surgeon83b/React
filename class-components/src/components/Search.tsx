@@ -26,11 +26,15 @@ class Search extends Component<SearchProps, State> {
   handleSearch = () => {
     const { onSearch } = this.props;
     onSearch([], '');
-    fetchData(this.state.search || 'pokemon?limit=100&offset=0').then(
-      (data) => {
-        this.setState({ ...this.state, data: data.data?.results });
-        onSearch(data.data?.results, data.error ?? '');
-      }
+    setTimeout(
+      () =>
+        fetchData(this.state.search || 'pokemon?limit=100&offset=0').then(
+          (data) => {
+            this.setState({ ...this.state, data: data.data?.results });
+            onSearch(data.data?.results, data.error ?? '');
+          }
+        ),
+      500
     );
   };
 
