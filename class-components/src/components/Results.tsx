@@ -11,7 +11,8 @@ interface ResultProps {
 class Results extends Component<ResultProps> {
   render() {
     const { data, error } = this.props;
-    if (data && !data.length) return <Spinner />;
+    if (!error && !data?.length) return <Spinner />;
+
     return (
       <>
         Results
@@ -26,7 +27,7 @@ class Results extends Component<ResultProps> {
               </thead>
               <tbody>
                 {data.map((card, index) => (
-                  <Card key={index} name={card.name} description={card.url} />
+                  <Card key={index} name={card.name} description={card.url ?? `id: ${card.id}, height: ${card.height}, weight: ${card.weight}`} />
                 ))}
               </tbody>
             </table>

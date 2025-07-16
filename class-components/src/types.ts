@@ -1,13 +1,9 @@
 export type Pokemon = {
   name: string;
-  url: string;
-};
-
-export type PokemonData = {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: Pokemon[];
+  id?: string;
+  url?: string;
+  height?: number;
+  weight?: number
 };
 
 export type State = {

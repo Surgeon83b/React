@@ -28,10 +28,10 @@ class Search extends Component<SearchProps, State> {
     onSearch([], '');
     setTimeout(
       () =>
-        fetchData(this.state.search || 'pokemon?limit=100&offset=0').then(
+        fetchData(this.state.search ? `/${this.state.search}` : '?limit=100&offset=0').then(
           (data) => {
-            this.setState({ ...this.state, data: data.data?.results });
-            onSearch(data.data?.results, data.error ?? '');
+            this.setState({ ...this.state, data: data.data });
+            onSearch(data.data, data.error ?? '');
           }
         ),
       500
