@@ -1,6 +1,6 @@
 export type Pokemon = {
   name: string;
-  id?: string;
+  id?: number;
   url?: string;
   height?: number;
   weight?: number

@@ -1,6 +1,6 @@
 import './App.css';
-import Search from './components/Search.tsx';
-import Results from './components/Results.tsx';
+import Search from './components/Search/Search.tsx';
+import Results from './components/Results/Results.tsx';
 import { Component } from 'react';
 import type { Pokemon } from './types.ts';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
@@ -27,7 +27,7 @@ class App extends Component<Record<string, never>, AppState> {
       <ErrorBoundary fallback={<ErrorPage />}>
         <div className='flex wrapper full'>
           <div className='info'>
-            <Search onSearch={this.onSearch} />
+            <Search onSearch={this.onSearch} placeholder={'Search'}/>
             <Results data={this.state.data} error={this.state.error} />
           </div>
           <ErrorButton />

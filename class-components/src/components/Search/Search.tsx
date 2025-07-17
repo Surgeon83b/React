@@ -1,8 +1,10 @@
 import { type ChangeEvent, Component } from 'react';
-import { fetchData } from '../api/fetch.ts';
-import type { Pokemon, State } from '../types.ts';
+import { fetchData } from '../../api/fetch.ts';
+import type { Pokemon, State } from '../../types.ts';
+import { getQueryString } from '../../helpers.ts';
 
 interface SearchProps {
+  placeholder: string;
   onSearch: (data: Array<Pokemon> | undefined, error: string) => void;
 }
 
@@ -20,15 +22,15 @@ class Search extends Component<SearchProps, State> {
     const trimmedSearch = this.state.search.trim();
     localStorage.setItem('search', trimmedSearch);
     this.setState({ search: trimmedSearch, data: [] });
-    this.handleSearch();
+    this.handleSearch(getQueryString(this.state.search));
   };
 
-  handleSearch = () => {
+  handleSearch = (query: string) => {
     const { onSearch } = this.props;
     onSearch([], '');
     setTimeout(
       () =>
-        fetchData(this.state.search ? `/${this.state.search}` : '?limit=100&offset=0').then(
+        fetchData(query).then(
           (data) => {
             this.setState({ ...this.state, data: data.data });
             onSearch(data.data, data.error ?? '');
@@ -39,7 +41,7 @@ class Search extends Component<SearchProps, State> {
   };
 
   componentDidMount() {
-    this.handleSearch();
+    this.handleSearch(getQueryString(this.state.search));
   }
 
   render() {
@@ -50,7 +52,7 @@ class Search extends Component<SearchProps, State> {
         </div>
         <div className='flex space-between search'>
           <input
-            placeholder={'Search'}
+            placeholder={this.props.placeholder}
             value={this.state.search}
             onChange={this.handleInputChange}
           />

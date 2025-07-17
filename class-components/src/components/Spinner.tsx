@@ -2,7 +2,7 @@ import { Component } from 'react';
 
 class Spinner extends Component {
   render() {
-    return <div className='spinner' />;
+    return <div data-testid="loading-spinner" className='spinner' />;
   }
 }
 

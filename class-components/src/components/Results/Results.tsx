@@ -1,7 +1,7 @@
 import { Component } from 'react';
-import type { Pokemon } from '../types.ts';
-import Card from './Card.tsx';
-import Spinner from './Spinner.tsx';
+import type { Pokemon } from '../../types.ts';
+import Card from '../Card.tsx';
+import Spinner from '../Spinner.tsx';
 
 interface ResultProps {
   data: Array<Pokemon> | undefined;
