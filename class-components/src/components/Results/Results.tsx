@@ -1,7 +1,7 @@
 import { Component } from 'react';
-import type { Pokemon } from '../types.ts';
-import Card from './Card.tsx';
-import Spinner from './Spinner.tsx';
+import type { Pokemon } from '../../types.ts';
+import Card from '../Card.tsx';
+import Spinner from '../Spinner.tsx';
 
 interface ResultProps {
   data: Array<Pokemon> | undefined;
@@ -11,7 +11,8 @@ interface ResultProps {
 class Results extends Component<ResultProps> {
   render() {
     const { data, error } = this.props;
-    if (data && !data.length) return <Spinner />;
+    if (!error && !data?.length) return <Spinner />;
+
     return (
       <>
         Results
@@ -26,7 +27,7 @@ class Results extends Component<ResultProps> {
               </thead>
               <tbody>
                 {data.map((card, index) => (
-                  <Card key={index} name={card.name} description={card.url} />
+                  <Card key={index} name={card.name} description={card.url ?? `id: ${card.id}, height: ${card.height}, weight: ${card.weight}`} />
                 ))}
               </tbody>
             </table>
