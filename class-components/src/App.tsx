@@ -3,7 +3,7 @@ import Search from './components/Search/Search.tsx';
 import Results from './components/Results/Results.tsx';
 import { Component } from 'react';
 import type { Pokemon } from './types.ts';
-import { ErrorBoundary } from './components/ErrorBoundary.tsx';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import ErrorButton from './components/ErrorButton.tsx';
 import ErrorPage from './components/ErrorPage.tsx';
 
@@ -23,11 +23,12 @@ class App extends Component<Record<string, never>, AppState> {
   };
 
   render() {
+
     return (
       <ErrorBoundary fallback={<ErrorPage />}>
         <div className='flex wrapper full'>
           <div className='info'>
-            <Search onSearch={this.onSearch} placeholder={'Search'}/>
+            <Search onSearch={this.onSearch} placeholder={'Search'} />
             <Results data={this.state.data} error={this.state.error} />
           </div>
           <ErrorButton />
