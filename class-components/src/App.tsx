@@ -1,10 +1,10 @@
 import './App.css';
-import Search from './components/Search/Search.tsx';
 import Results from './components/Results/Results.tsx';
 import { useState } from 'react';
 import type { SearchData } from './types.ts';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import ErrorPage from './components/ErrorPage.tsx';
+import { Search } from '@/components';
 
 const App = () => {
   const [data, setData] = useState<SearchData>([]);

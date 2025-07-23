@@ -1,4 +1,4 @@
-import type { Pokemon } from '../types.ts';
+import type { Pokemon } from '@/types';
 
 const POKEMON_ENDPOINT = 'https://pokeapi.co/api/v2/pokemon';
 

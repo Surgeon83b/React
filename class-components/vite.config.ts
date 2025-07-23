@@ -1,9 +1,18 @@
 import { defineConfig, mergeConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig as defineVitestConfig } from 'vitest/config';
+import path from 'path';
 
 export default mergeConfig(
-  defineConfig({ plugins: [react()] }),
+  defineConfig({
+    plugins: [react()],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src'),
+      },
+    },
+    base: './',
+  }),
   defineVitestConfig({
     test: {
       environment: 'jsdom',
@@ -22,7 +31,7 @@ export default mergeConfig(
           '**/types.ts',
           '**/vite-env.d.ts',
           '.vite/**',
-          'dist/**'
+          'dist/**',
         ],
         all: false,
         thresholds: {
