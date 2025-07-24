@@ -80,6 +80,10 @@ button:focus-visible {
   display: flex;
 }
 
+.column {
+  flex-direction: column;
+}
+
 .space-between {
   justify-content: space-between;
 }
@@ -106,10 +110,10 @@ button:focus-visible {
 }
 
 .table-container {
-  margin: 12px;
-  max-height: 70vh;
+  max-height: 60vh;
   overflow-y: auto;
   display: block;
+  margin: 12px 12px 24px;
 }
 
 tbody {
@@ -156,6 +160,11 @@ img {
   left: calc(50% - 10vw);
 }
 
+.centered-flex {
+  justify-content: center;
+  align-items: center;
+}
+
 .big {
   background-color: lightskyblue;
   width: 20vw;
@@ -171,4 +180,12 @@ img {
 .hint {
   color: yellow;
   margin-bottom: 12px;
+}
+
+.gap-16 {
+  gap: 16px;
+}
+
+.yellow {
+  background-color: yellow;
 }

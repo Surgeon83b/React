@@ -1,7 +1,8 @@
-import { type ChangeEvent, useState } from 'react';
+import { type ChangeEvent } from 'react';
 import { fetchData } from '@/api/fetch';
 import type { SearchData } from '@/types';
 import { getQueryString } from '@/helpers';
+import useLocalStorage from '@/useLocalStorage.ts';
 
 interface SearchProps {
   placeholder: string;
@@ -9,11 +10,7 @@ interface SearchProps {
 }
 
 export const Search = ({ placeholder, onSearch }: SearchProps) => {
-  const [search, setSearch] = useState(() => {
-    const savedSearch = localStorage.getItem('search') || '';
-    handleSearch(getQueryString(savedSearch));
-    return savedSearch;
-  });
+  const { search, setSearch, saveSearch } = useLocalStorage(handleSearch);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value.trim());
@@ -34,7 +31,7 @@ export const Search = ({ placeholder, onSearch }: SearchProps) => {
   }
 
   const handleClick = () => {
-    localStorage.setItem('search', search);
+    saveSearch();
     setSearch(search);
     handleSearch(getQueryString(search));
   };

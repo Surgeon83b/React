@@ -1,22 +1,28 @@
-import { Component } from 'react';
+import { useSearchParams } from 'react-router';
 
 interface CardProps {
+  id: number;
   name: string;
   description: string;
 }
 
-class Card extends Component<CardProps> {
-  render() {
-    const { name, description } = this.props;
-    return (
-      <tr>
-        <td>{name}</td>
-        <td>
-          <a href={description}>{description}</a>
-        </td>
-      </tr>
-    );
-  }
-}
+const Card = ({ id, name, description }: CardProps) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const setParams = () => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('details', String(id));
+    setSearchParams(newParams);
+  };
+
+  return (
+    <tr>
+      <td>{name}</td>
+      <td>
+        <button onClick={() => setParams()}>{description}</button>
+      </td>
+    </tr>
+  );
+};
 
 export default Card;

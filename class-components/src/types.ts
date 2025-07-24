@@ -1,9 +1,9 @@
 export type Pokemon = {
   name: string;
-  id?: number;
+  id: number;
   url?: string;
   height?: number;
-  weight?: number
+  weight?: number;
 };
 
 export type State = {
@@ -15,5 +15,5 @@ export type SearchData = Array<Pokemon> | undefined;
 
 export type FetchData = {
   data: SearchData;
-  error?: string
-}
+  error?: string;
+};
