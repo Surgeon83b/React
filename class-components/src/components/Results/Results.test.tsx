@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Results from './Results';
-import type { Pokemon } from '../../types';
+import type { Pokemon } from '@/types.ts';
+import {MemoryRouter} from "react-router";
 
 vi.mock('./Spinner', () => ({
   default: () => <div data-testid="loading-spinner">Loading...</div>
@@ -26,25 +27,28 @@ describe('Results Component', () => {
   ];
 
   describe('Loading State', () => {
-    it('should display loading spinner when data is undefined and no error', () => {
-      render(<Results data={undefined} error="" />);
+    test('should display loading spinner when data is undefined and no error', () => {
+      const { container } = render(
+        <MemoryRouter>
+          <Results data={undefined} error={''} />
+        </MemoryRouter>
+      );
 
-      expect(screen.getByTestId('loading-spinner')).toBeInTheDocument();
-      expect(screen.queryByRole('table')).not.toBeInTheDocument();
+      expect(container.querySelector('.spinner')).toBeInTheDocument();
     });
   });
 
   describe('Error State', () => {
     it('should display error message when error exists', () => {
       const errorMessage = 'API request failed';
-      render(<Results data={undefined} error={errorMessage} />);
+      render(<MemoryRouter><Results data={undefined} error={errorMessage} /></MemoryRouter>);
 
       expect(screen.getByText(errorMessage)).toBeInTheDocument();
       expect(screen.queryByTestId('loading-spinner')).not.toBeInTheDocument();
     });
 
     it('should not show table when error exists', () => {
-      render(<Results data={[]} error="No results found" />);
+      render(<MemoryRouter><Results data={[]} error="No results found" /></MemoryRouter>);
 
       expect(screen.getByText('No results found')).toBeInTheDocument();
       expect(screen.queryByRole('table')).not.toBeInTheDocument();
@@ -53,14 +57,14 @@ describe('Results Component', () => {
 
   describe('Data Display', () => {
     it('should render correct number of pokemon cards', () => {
-      render(<Results data={mockPokemonData} error="" />);
+      render(<MemoryRouter><Results data={mockPokemonData} error="" /></MemoryRouter>);
 
       const rows = screen.getAllByRole('row');
       expect(rows).toHaveLength(3); // Header + 2 pokemons
     });
 
     it('should display all pokemon details correctly', () => {
-      render(<Results data={mockPokemonData} error="" />);
+      render(<MemoryRouter><Results data={mockPokemonData} error="" /></MemoryRouter>);
 
       expect(screen.getByText('Name')).toBeInTheDocument();
       expect(screen.getByText('Description')).toBeInTheDocument();
@@ -79,7 +83,7 @@ describe('Results Component', () => {
         ...mockPokemonData[0],
         url: undefined
       };
-      render(<Results data={[pokemonWithoutUrl]} error="" />);
+      render(<MemoryRouter><Results data={[pokemonWithoutUrl]} error="" /></MemoryRouter>);
 
       const expectedText = `id: ${pokemonWithoutUrl.id}, height: ${pokemonWithoutUrl.height}, weight: ${pokemonWithoutUrl.weight}`;
       expect(screen.getByText(expectedText)).toBeInTheDocument();

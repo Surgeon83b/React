@@ -80,6 +80,10 @@ button:focus-visible {
   display: flex;
 }
 
+.column {
+  flex-direction: column;
+}
+
 .space-between {
   justify-content: space-between;
 }
@@ -92,28 +96,28 @@ button:focus-visible {
 
 .full {
   width: 60vw;
-  height: 60vh;
-  justify-content: space-between;
-}
-
-.info {
-  width: 100%;
 }
 
 .search {
+  width: 50%;
   gap: 12px;
+  margin-top: 24px;
   margin-bottom: 30px;
 }
 
 .table-container {
-  margin: 12px;
-  max-height: 70vh;
+  max-height: 60vh;
   overflow-y: auto;
   display: block;
+  margin: 12px 12px 24px;
 }
 
 tbody {
   padding-top: 12px;
+}
+
+tr {
+
 }
 
 .spinner {
@@ -156,6 +160,11 @@ img {
   left: calc(50% - 10vw);
 }
 
+.centered-flex {
+  justify-content: center;
+  align-items: center;
+}
+
 .big {
   background-color: lightskyblue;
   width: 20vw;
@@ -168,7 +177,56 @@ img {
   color: green;
 }
 
-.hint {
-  color: yellow;
-  margin-bottom: 12px;
+.gap-16 {
+  gap: 16px;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.split-view-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.results {
+  overflow-y: auto;
+  width: 480px;
+  @media screen and (max-width: 420px) {
+
+  };
+}
+
+.details-content {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  padding: 16px;
+  transform: translateY(-50%);
+
+  img {
+    width: 96px;
+  }
+}
+
+.split-layout {
+  position: relative;
+  display: flex;
+}
+
+input {
+  width: 100%;
+}
+
+.card {
+  padding: 4px;
+  border: 2px solid;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+header {
+  margin: 16px;
 }

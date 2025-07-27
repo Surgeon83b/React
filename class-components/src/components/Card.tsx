@@ -1,22 +1,16 @@
-import { Component } from 'react';
+import type {Pokemon} from "@/types.ts";
 
-interface CardProps {
-  name: string;
-  description: string;
-}
+const Card = (pokemon: Pokemon) => {
+  const {name, sprites, height, weight} = pokemon;
 
-class Card extends Component<CardProps> {
-  render() {
-    const { name, description } = this.props;
-    return (
-      <tr>
-        <td>{name}</td>
-        <td>
-          <a href={description}>{description}</a>
-        </td>
-      </tr>
-    );
-  }
-}
+  return (
+    <div className='card'>
+      <h2>{name}</h2>
+      <img src={sprites?.front_default} alt={name} />
+      <div>Height: {height}</div>
+      <div>Weight: {weight}</div>
+    </div>
+  );
+};
 
 export default Card;

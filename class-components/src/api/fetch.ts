@@ -1,4 +1,4 @@
-import type { Pokemon } from '../types.ts';
+import type { Pokemon } from '@/types';
 
 const POKEMON_ENDPOINT = 'https://pokeapi.co/api/v2/pokemon';
 
@@ -13,7 +13,16 @@ export const fetchData = async (
     }
 
     const data = await response.json();
-    return { data: ('results' in data) ? data.results : [data], error: undefined };
+    return {
+      data:
+        'results' in data
+          ? data.results.map((item: Pokemon, index: number) => ({
+              ...item,
+              id: index + 1,
+            }))
+          : [data],
+      error: undefined,
+    };
   } catch (error) {
     console.error('Fetch error:', error);
     return {

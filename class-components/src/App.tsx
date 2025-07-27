@@ -1,41 +1,40 @@
 import './App.css';
-import Search from './components/Search/Search.tsx';
 import Results from './components/Results/Results.tsx';
-import { Component } from 'react';
-import type { Pokemon } from './types.ts';
-import { ErrorBoundary } from './components/ErrorBoundary';
-import ErrorButton from './components/ErrorButton.tsx';
-import ErrorPage from './components/ErrorPage.tsx';
+import { useState } from 'react';
+import type { SearchData } from './types.ts';
+import { Search } from '@/components';
+import { useSearchParams } from 'react-router';
 
-interface AppState {
-  data?: Pokemon[];
-  error: string;
-}
+const App = () => {
+  const [data, setData] = useState<SearchData>([]);
+  const [error, setError] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
 
-class App extends Component<Record<string, never>, AppState> {
-  state: AppState = {
-    data: [],
-    error: '',
+  const onSearch = (newData: SearchData, err: string) => {
+    const newParams = new URLSearchParams();
+    setSearchParams(newParams, { replace: true });
+    setData(newData);
+    setError(err);
   };
 
-  onSearch = (newData: Array<Pokemon> | undefined, err: string) => {
-    this.setState({ data: newData, error: err });
+  const onSectionClick = () => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete('details');
+    setSearchParams(newParams);
   };
 
-  render() {
-
-    return (
-      <ErrorBoundary fallback={<ErrorPage />}>
-        <div className='flex wrapper full'>
-          <div className='info'>
-            <Search onSearch={this.onSearch} placeholder={'Search'} />
-            <Results data={this.state.data} error={this.state.error} />
-          </div>
-          <ErrorButton />
-        </div>
-      </ErrorBoundary>
-    );
-  }
-}
+  return (
+    <div className='flex wrapper full' onClick={onSectionClick}>
+      <Search
+        onSearch={onSearch}
+        resetParams={() => {
+          const newParams = new URLSearchParams();
+          setSearchParams(newParams, { replace: true });
+        }}
+      />
+      <Results data={data} error={error} />
+    </div>
+  );
+};
 
 export default App;

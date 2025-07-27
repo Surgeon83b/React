@@ -1,66 +1,53 @@
-import { type ChangeEvent, Component } from 'react';
-import { fetchData } from '../../api/fetch.ts';
-import type { Pokemon, State } from '../../types.ts';
-import { getQueryString } from '../../helpers.ts';
+import { type ChangeEvent } from 'react';
+import { fetchData } from '@/api/fetch';
+import type { SearchData } from '@/types';
+import { getQueryString } from '@/helpers';
+import useLocalStorage from '@/useLocalStorage.ts';
 
 interface SearchProps {
-  placeholder: string;
-  onSearch: (data: Array<Pokemon> | undefined, error: string) => void;
+  onSearch: (data: SearchData, error: string) => void;
+  resetParams: () => void;
 }
 
-class Search extends Component<SearchProps, State> {
-  state = {
-    search: localStorage.getItem('search') || '',
-    data: [],
+export const Search = ({ onSearch, resetParams }: SearchProps) => {
+  const { search, setSearch, saveSearch } = useLocalStorage(handleSearch);
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
   };
 
-  handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    this.setState({ search: e.target.value });
-  };
+  function handleSearch(query: string) {
+    const timerId = setTimeout(async () => {
+      resetParams();
+      onSearch([], '');
+      try {
+        const { data, error } = await fetchData(query);
+        onSearch(data, error ?? '');
+      } catch (err) {
+        onSearch([], err instanceof Error ? err.message : 'Unknown error');
+      }
+    }, 500);
 
-  handleClick = () => {
-    const trimmedSearch = this.state.search.trim();
-    localStorage.setItem('search', trimmedSearch);
-    this.setState({ search: trimmedSearch, data: [] });
-    this.handleSearch(getQueryString(this.state.search));
-  };
-
-  handleSearch = (query: string) => {
-    const { onSearch } = this.props;
-    onSearch([], '');
-    setTimeout(
-      () =>
-        fetchData(query).then(
-          (data) => {
-            this.setState({ ...this.state, data: data.data });
-            onSearch(data.data, data.error ?? '');
-          }
-        ),
-      500
-    );
-  };
-
-  componentDidMount() {
-    this.handleSearch(getQueryString(this.state.search));
+    return () => clearTimeout(timerId);
   }
 
-  render() {
-    return (
-      <>
-        <div className='hint'>
-          Type 'pokemon' or leave field empty to get data
-        </div>
-        <div className='flex space-between search'>
-          <input
-            placeholder={this.props.placeholder}
-            value={this.state.search}
-            onChange={this.handleInputChange}
-          />
-          <button onClick={this.handleClick}>Search</button>
-        </div>
-      </>
-    );
-  }
-}
+  const handleClick = () => {
+    const trimmedSearch = search.trim();
+    setSearch(trimmedSearch);
+    saveSearch(trimmedSearch);
+    handleSearch(getQueryString(trimmedSearch));
+  };
+
+  return (
+    <div className='flex space-between search'>
+      <input
+        placeholder={'Type pokemon name or leave field empty'}
+        value={search}
+        onChange={handleInputChange}
+      />
+      <button onClick={handleClick}>Search</button>
+    </div>
+  );
+};
 
 export default Search;
