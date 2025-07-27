@@ -96,16 +96,12 @@ button:focus-visible {
 
 .full {
   width: 60vw;
-  height: 60vh;
-  justify-content: space-between;
-}
-
-.info {
-  width: 100%;
 }
 
 .search {
+  width: 50%;
   gap: 12px;
+  margin-top: 24px;
   margin-bottom: 30px;
 }
 
@@ -118,6 +114,10 @@ button:focus-visible {
 
 tbody {
   padding-top: 12px;
+}
+
+tr {
+
 }
 
 .spinner {
@@ -177,15 +177,56 @@ img {
   color: green;
 }
 
-.hint {
-  color: yellow;
-  margin-bottom: 12px;
-}
-
 .gap-16 {
   gap: 16px;
 }
 
 .yellow {
   background-color: yellow;
+}
+
+.split-view-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.results {
+  overflow-y: auto;
+  width: 480px;
+  @media screen and (max-width: 420px) {
+
+  };
+}
+
+.details-content {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  padding: 16px;
+  transform: translateY(-50%);
+
+  img {
+    width: 96px;
+  }
+}
+
+.split-layout {
+  position: relative;
+  display: flex;
+}
+
+input {
+  width: 100%;
+}
+
+.card {
+  padding: 4px;
+  border: 2px solid;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+header {
+  margin: 16px;
 }

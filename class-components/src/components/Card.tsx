@@ -1,27 +1,15 @@
-import { useSearchParams } from 'react-router';
+import type {Pokemon} from "@/types.ts";
 
-interface CardProps {
-  id: number;
-  name: string;
-  description: string;
-}
-
-const Card = ({ id, name, description }: CardProps) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const setParams = () => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set('details', String(id));
-    setSearchParams(newParams);
-  };
+const Card = (pokemon: Pokemon) => {
+  const {name, sprites, height, weight} = pokemon;
 
   return (
-    <tr>
-      <td>{name}</td>
-      <td>
-        <button onClick={() => setParams()}>{description}</button>
-      </td>
-    </tr>
+    <div className='card'>
+      <h2>{name}</h2>
+      <img src={sprites.front_default} alt={name} />
+      <div>Height: {height}</div>
+      <div>Weight: {weight}</div>
+    </div>
   );
 };
 

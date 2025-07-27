@@ -5,11 +5,11 @@ import { getQueryString } from '@/helpers';
 import useLocalStorage from '@/useLocalStorage.ts';
 
 interface SearchProps {
-  placeholder: string;
   onSearch: (data: SearchData, error: string) => void;
+  resetParams: () => void;
 }
 
-export const Search = ({ placeholder, onSearch }: SearchProps) => {
+export const Search = ({ onSearch, resetParams }: SearchProps) => {
   const { search, setSearch, saveSearch } = useLocalStorage(handleSearch);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -18,6 +18,7 @@ export const Search = ({ placeholder, onSearch }: SearchProps) => {
 
   function handleSearch(query: string) {
     const timerId = setTimeout(async () => {
+      resetParams();
       onSearch([], '');
       try {
         const { data, error } = await fetchData(query);
@@ -37,19 +38,14 @@ export const Search = ({ placeholder, onSearch }: SearchProps) => {
   };
 
   return (
-    <>
-      <div className='hint'>
-        Type 'pokemon' or leave field empty to get data
-      </div>
-      <div className='flex space-between search'>
-        <input
-          placeholder={placeholder}
-          value={search}
-          onChange={handleInputChange}
-        />
-        <button onClick={handleClick}>Search</button>
-      </div>
-    </>
+    <div className='flex space-between search'>
+      <input
+        placeholder={'Type pokemon name or leave field empty'}
+        value={search}
+        onChange={handleInputChange}
+      />
+      <button onClick={handleClick}>Search</button>
+    </div>
   );
 };
 

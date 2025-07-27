@@ -4,6 +4,9 @@ export type Pokemon = {
   url?: string;
   height?: number;
   weight?: number;
+  sprites?: {
+    front_default: string;
+  };
 };
 
 export type State = {
