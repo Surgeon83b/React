@@ -13,7 +13,7 @@ export const Search = ({ onSearch, resetParams }: SearchProps) => {
   const { search, setSearch, saveSearch } = useLocalStorage(handleSearch);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value.trim());
+    setSearch(e.target.value);
   };
 
   function handleSearch(query: string) {
@@ -32,9 +32,10 @@ export const Search = ({ onSearch, resetParams }: SearchProps) => {
   }
 
   const handleClick = () => {
-    saveSearch();
-    setSearch(search);
-    handleSearch(getQueryString(search));
+    const trimmedSearch = search.trim();
+    setSearch(trimmedSearch);
+    saveSearch(trimmedSearch);
+    handleSearch(getQueryString(trimmedSearch));
   };
 
   return (

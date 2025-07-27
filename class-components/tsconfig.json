@@ -12,7 +12,6 @@
     "types": [
       "@testing-library/jest-dom",
       "vitest/globals",
-      "jest"
     ],
     "typeRoots": [
       "node_modules/@types",

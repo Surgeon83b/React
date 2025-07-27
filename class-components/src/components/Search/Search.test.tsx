@@ -7,9 +7,8 @@ import '@testing-library/jest-dom/vitest';
 const mockOnSearch = vi.fn();
 
 const defaultProps = {
-  placeholder: 'Test placeholder',
-  initialValue: '',
   onSearch: mockOnSearch,
+  resetParams: mockOnSearch,
 };
 
 describe('Search Component: Rendering', () => {
@@ -25,9 +24,6 @@ describe('Search Component: Rendering', () => {
   // 1. Тест на рендеринг с переданными пропсами
   it('renders correctly with provided props', () => {
     render(<Search {...defaultProps} />);
-
-    const input = screen.getByPlaceholderText(defaultProps.placeholder);
-    expect(input).toBeInTheDocument();
 
     const button = screen.getByRole('button', { name: /search/i });
     expect(button).toBeInTheDocument();
@@ -53,18 +49,6 @@ describe('Search Component: Rendering', () => {
     const input = screen.getByRole('textbox');
     expect(input).toHaveValue('');
   });
-
-
-  /*// 5. Тест на обработку пустого ввода
-  it('handles empty search correctly', async () => {
-    const user = userEvent.setup();
-    render(<Search {...defaultProps} />);
-
-    const button = screen.getByRole('button', { name: /search/i });
-    await user.click(button);
-
-    expect(mockOnSearch).toHaveBeenCalledWith('');
-  });*/
 });
 
 describe('Search Component: User events', () => {
@@ -87,7 +71,7 @@ describe('Search Component: User events', () => {
     const user = userEvent.setup();
     render(<Search {...defaultProps} />);
 
-    const input = screen.getByPlaceholderText(defaultProps.placeholder);
+    const input = screen.getByRole('textbox');
 
     // 1. Проверяем начальное значение
     expect(input).toHaveValue('pikachu');
@@ -106,7 +90,7 @@ describe('Search Component: User events', () => {
 
     render(<Search {...defaultProps} />);
 
-    const input = screen.getByPlaceholderText(defaultProps.placeholder);
+    const input = screen.getByRole('textbox');
     const button = screen.getByRole('button', { name: /search/i });
 
     // Очищаем поле перед вводом нового значения
@@ -124,7 +108,6 @@ describe('Search Component: User events', () => {
     const input = screen.getByRole('textbox');
     const button = screen.getByRole('button', { name: /search/i });
 
-    // Очищаем начальное значение перед новым вводом
     await user.clear(input);
     await user.type(input, '  charizard  ');
     await user.click(button);
@@ -132,4 +115,3 @@ describe('Search Component: User events', () => {
     expect(localStorage.setItem).toHaveBeenCalledWith('search', 'charizard');
   });
 });
-

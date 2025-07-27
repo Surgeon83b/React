@@ -4,7 +4,7 @@ import { getQueryString } from '@/helpers.ts';
 type FromLocalStorage = {
   search: string;
   setSearch: (s: string) => void;
-  saveSearch: () => void;
+  saveSearch: (s: string) => void;
 };
 
 const UseLocalStorage = (
@@ -16,7 +16,7 @@ const UseLocalStorage = (
     return savedSearch;
   });
 
-  const saveSearch = () => localStorage.setItem('search', search);
+  const saveSearch = (s: string) => localStorage.setItem('search', s);
 
   return { search, setSearch, saveSearch };
 };
