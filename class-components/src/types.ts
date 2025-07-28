@@ -20,3 +20,16 @@ export type FetchData = {
   data: SearchData;
   error?: string;
 };
+
+export interface ListCardProps {
+  id: number;
+  name: string;
+  description: string;
+}
+
+export type Theme = 'light' | 'dark';
+
+export type ThemeContextType = {
+  theme: Theme;
+  toggleTheme: () => void;
+};
