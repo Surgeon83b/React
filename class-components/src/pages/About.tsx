@@ -1,4 +1,4 @@
-const About = () => {
+export const About = () => {
   return (
     <div className={'flex centered column'}>
       <h3>author: Kanstantsin Piatkevich</h3>
@@ -7,5 +7,3 @@ const About = () => {
     </div>
   );
 };
-
-export default About;

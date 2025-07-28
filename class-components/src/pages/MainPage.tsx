@@ -1,11 +1,11 @@
-import './App.css';
-import Results from './components/Results/Results.tsx';
+import '../App.css';
+import Results from '../components/Results/Results.tsx';
 import { useState } from 'react';
-import type { SearchData } from './types.ts';
+import type { SearchData } from '../types.ts';
 import { Search } from '@/components';
 import { useSearchParams } from 'react-router';
 
-const App = () => {
+export const MainPage = () => {
   const [data, setData] = useState<SearchData>([]);
   const [error, setError] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
@@ -36,5 +36,3 @@ const App = () => {
     </div>
   );
 };
-
-export default App;
