@@ -23,6 +23,9 @@ const ListCard = ({ id, name, description }: CardProps) => {
 
   return (
     <tr>
+      <td>
+        <input type="checkbox"/>
+      </td>
       <td>{name}</td>
       <td>
         <button onClick={handleClick}>{description}</button>

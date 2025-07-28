@@ -48,6 +48,7 @@ export const Results = ({ data, error }: ResultProps) => {
         <table>
           <thead>
             <tr>
+              <td></td>
               <td className={'green'}>Name</td>
               <td className={'green'}>Description</td>
             </tr>
