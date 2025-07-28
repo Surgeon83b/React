@@ -5,6 +5,8 @@ import { PAGE_SIZE } from '@/components/constants.ts';
 import { useSearchParams } from 'react-router';
 import { useEffect } from 'react';
 import * as React from 'react';
+import { usePokemonState } from '@/store/store.ts';
+import { Modal } from '@/components';
 
 interface ResultProps {
   data: Array<Pokemon> | undefined;
@@ -14,6 +16,8 @@ interface ResultProps {
 export const Results = ({ data, error }: ResultProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get('page')) || 1;
+
+  const { isEmpty } = usePokemonState();
 
   useEffect(() => {
     if (data?.length && !searchParams.has('page')) {
@@ -42,7 +46,7 @@ export const Results = ({ data, error }: ResultProps) => {
   };
 
   return (
-    <div className={'results'}>
+    <div className='results'>
       Results
       <div className='table-container'>
         <table>
@@ -79,6 +83,7 @@ export const Results = ({ data, error }: ResultProps) => {
           </button>
         </div>
       )}
+      {!isEmpty() && <Modal />}
     </div>
   );
 };
