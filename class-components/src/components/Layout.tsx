@@ -7,8 +7,8 @@ export const Layout = () => {
     <>
       <header>
         <Link to='/about'>About</Link>
+        <ThemeToggle/>
       </header>
-      <ThemeToggle/>
       <div className='split-layout'>
         <Outlet />
         <Details />

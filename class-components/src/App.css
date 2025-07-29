@@ -1,4 +1,3 @@
-#root {
-  text-align: center;
-  box-sizing: border-box;
+.wrapper {
+  padding: 24px;
 }

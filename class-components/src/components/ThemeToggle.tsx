@@ -6,10 +6,8 @@ export const ThemeToggle = () => {
   const { theme, toggleTheme } = value || {};
 
   return (
-    <div className='flex row-right'>
-      <button onClick={toggleTheme}>
-        {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
-      </button>
-    </div>
+    <button className='row-right' onClick={toggleTheme} >
+      {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+    </button>
   );
 };

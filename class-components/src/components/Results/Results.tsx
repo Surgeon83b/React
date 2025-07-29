@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import * as React from 'react';
 import { usePokemonState } from '@/store/store.ts';
 import { Modal } from '@/components';
+import './Results.css';
 
 interface ResultProps {
   data: Array<Pokemon> | undefined;
@@ -83,7 +84,7 @@ export const Results = ({ data, error }: ResultProps) => {
           </button>
         </div>
       )}
-      {!isEmpty() && <Modal />}
+      <Modal open={!isEmpty()}/>
     </div>
   );
 };
