@@ -2,7 +2,7 @@ import type { ListCardProps } from '@/types.ts';
 import { create } from 'zustand/react';
 
 type State = {
-  items: Array<ListCardProps>;
+  items: ListCardProps[];
 };
 
 type Action = {

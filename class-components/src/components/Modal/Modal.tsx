@@ -26,7 +26,7 @@ export const Modal = ({ open }: { open: boolean }) => {
 
       return () => clearTimeout(timer);
     }
-  }, [open]);
+  }, [open, closeDuration]);
 
   if (!isMounted) {
     return null;
@@ -36,6 +36,7 @@ export const Modal = ({ open }: { open: boolean }) => {
     <div
       className={`popup-bottom-sheet ${isAnimatingOut ? 'closed' : ''}`}
       onClick={(e) => e.stopPropagation()}
+      role='dialog'
     >
       <div className='popup-content'>
         <h4>{`${items.length} item(s) selected`}</h4>
