@@ -1,14 +1,12 @@
 import { useSearchParams } from 'react-router';
-import * as React from "react";
+import * as React from 'react';
+import type { ListCardProps } from '@/types.ts';
+import { usePokemonState } from '@/store/store.ts';
 
-interface CardProps {
-  id: number;
-  name: string;
-  description: string;
-}
-
-const ListCard = ({ id, name, description }: CardProps) => {
+const ListCard = ({ id, name, description }: ListCardProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { toggleItem, isSelected } = usePokemonState();
+  const checked = isSelected(id);
 
   const setParams = () => {
     const newParams = new URLSearchParams(searchParams);
@@ -23,6 +21,13 @@ const ListCard = ({ id, name, description }: CardProps) => {
 
   return (
     <tr>
+      <td>
+        <input
+          type='checkbox'
+          checked={checked}
+          onChange={() => toggleItem({ id, name, description })}
+        />
+      </td>
       <td>{name}</td>
       <td>
         <button onClick={handleClick}>{description}</button>

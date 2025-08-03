@@ -2,7 +2,8 @@ import { type ChangeEvent } from 'react';
 import { fetchData } from '@/api/fetch';
 import type { SearchData } from '@/types';
 import { getQueryString } from '@/helpers';
-import useLocalStorage from '@/useLocalStorage.ts';
+import useLocalStorage from '@/hooks/useLocalStorage.ts';
+import './Search.css';
 
 interface SearchProps {
   onSearch: (data: SearchData, error: string) => void;
