@@ -1,7 +1,29 @@
-name: Test
-on: [push]
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing GitHub Actions 🚀
+on:
+  push:
+    paths:
+      - 'class-components/**'  # Следим только за изменениями в этой папке
+
 jobs:
-  test:
+  Explore-GitHub-Actions:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./class-components  # Рабочая директория
+
     steps:
-      - run: echo "Hello World"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show environment info
+        run: |
+          echo "📌 Рабочая директория: ${{ github.workspace }}"
+          echo "📂 Содержимое папки class-components:"
+          ls -la class-components
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
