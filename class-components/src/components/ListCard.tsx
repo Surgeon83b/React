@@ -10,7 +10,7 @@ const ListCard = ({ id, name, description }: ListCardProps) => {
 
   const setParams = () => {
     const newParams = new URLSearchParams(searchParams);
-    newParams.set('details', String(id));
+    newParams.set('details', id);
     setSearchParams(newParams);
   };
 
