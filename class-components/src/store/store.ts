@@ -13,6 +13,8 @@ type Action = {
   downloadSelected: () => void;
 };
 
+export type PokemonState = State & Action;
+
 export const usePokemonState = create<State & Action>((set, get) => ({
   items: [],
   isEmpty: () => !get().items.length,

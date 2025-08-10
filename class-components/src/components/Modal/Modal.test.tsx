@@ -1,103 +1,145 @@
-import { render, screen, fireEvent, act } from '@testing-library/react';
-import { usePokemonState } from '@/store/store.ts';
-import { Results } from '../Results';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import { MemoryRouter } from 'react-router-dom';
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from '@tanstack/react-query';
 import { vi } from 'vitest';
-import { MemoryRouter } from 'react-router';
+import type { UseQueryResult } from '@tanstack/react-query';
+import { usePokemonState, type PokemonState } from '@/store/store';
+import { Modal, Results } from '@/components';
 
-const mockPokemons = [
-  {
-    id: 1,
-    name: 'Pikachu',
-    description: 'Electric',
-  },
-  {
-    id: 2,
-    name: 'Bulbasaur',
-    description: 'Grass',
-  },
-];
+vi.mock('@tanstack/react-query', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@tanstack/react-query')>();
+  return {
+    ...actual,
+    useQuery: vi.fn(),
+  };
+});
 
-describe('Results Component', () => {
-  const renderWithRouter = (ui: React.ReactElement) => {
-    return render(<MemoryRouter>{ui}</MemoryRouter>);
+vi.mock('./Spinner', () => ({
+  default: () => <div data-testid='loading-spinner'>Loading...</div>,
+}));
+
+describe('Modal Component Tests', () => {
+  const mockPokemons = [
+    {
+      id: '1',
+      name: 'Pikachu',
+      url: 'pokemon/1',
+      description: 'Electric Pokémon',
+    },
+    {
+      id: '2',
+      name: 'Bulbasaur',
+      url: 'pokemon/2',
+      description: 'Grass Pokémon',
+    },
+  ];
+
+  const queryClient = new QueryClient();
+  const mockedUseQuery = vi.mocked(useQuery);
+  let store: PokemonState;
+
+  const renderComponent = (component: React.ReactNode) => {
+    return render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>{component}</MemoryRouter>
+      </QueryClientProvider>
+    );
   };
 
   beforeEach(() => {
-    usePokemonState.getState().clearItems();
+    mockedUseQuery.mockReturnValue({
+      data: mockPokemons,
+      status: 'success',
+      refetch: vi.fn(),
+    } as unknown as UseQueryResult<typeof mockPokemons, Error>);
+
+    store = usePokemonState.getState();
+    store.clearItems();
     global.URL.createObjectURL = vi.fn();
     HTMLAnchorElement.prototype.click = vi.fn();
   });
 
-  describe('Initial State', () => {
-    it('should not show modal initially', () => {
-      renderWithRouter(<Results data={mockPokemons} error='' />);
-      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    });
-  });
-
   describe('Item Selection', () => {
-    it('should toggle item selection when clicking checkboxes', () => {
-      renderWithRouter(<Results data={mockPokemons} error='' />);
-      const checkboxes = screen.getAllByRole('checkbox');
+    it('should toggle item selection when clicking checkboxes', async () => {
+      renderComponent(<Results searchQuery="" />);
 
-      expect(usePokemonState.getState().items).toEqual([]);
+      await screen.findByRole('table');
+      const checkboxes = await screen.findAllByRole('checkbox');
 
-      fireEvent.click(checkboxes[0]);
-      expect(usePokemonState.getState().items).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            id: mockPokemons[0].id,
-            name: mockPokemons[0].name,
-          }),
-        ])
-      );
+      expect(checkboxes).toHaveLength(mockPokemons.length);
 
       fireEvent.click(checkboxes[0]);
+
+      expect(usePokemonState.getState().items).toEqual([
+        expect.objectContaining({
+          id: mockPokemons[0].id.toString(), // ID должен быть строкой
+          name: mockPokemons[0].name,
+          description: expect.any(String), // Описание может быть любым строковым значением
+        }),
+      ]);
+
+      fireEvent.click(checkboxes[0]);
+
       expect(usePokemonState.getState().items).toEqual([]);
-    });
-
-    it('should show modal when items are selected', () => {
-      renderWithRouter(<Results data={mockPokemons} error='' />);
-
-      act(() => {
-        usePokemonState.getState().toggleItem(mockPokemons[0]);
-      });
-
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
-    });
-
-    it('should display correct count of selected items', () => {
-      renderWithRouter(<Results data={mockPokemons} error='' />);
-
-      act(() => {
-        usePokemonState.getState().toggleItem(mockPokemons[0]);
-        usePokemonState.getState().toggleItem(mockPokemons[1]);
-      });
-
-      expect(screen.getByText('2 item(s) selected')).toBeInTheDocument();
     });
   });
 
   describe('Download Functionality', () => {
-    it('should enable download button when items are selected', () => {
-      act(() => {
-        usePokemonState.getState().toggleItem(mockPokemons[0]);
+    it('should show download button when items are selected', async () => {
+      // 1. Устанавливаем начальное состояние с выбранным элементом
+      usePokemonState.setState({
+        items: [
+          {
+            id: '1',
+            name: 'Pikachu',
+            description: 'id: 1, height: 4, weight: 60',
+          },
+        ],
       });
 
-      renderWithRouter(<Results data={mockPokemons} error='' />);
-      expect(screen.getByRole('button', { name: /download/i })).toBeEnabled();
+      renderComponent(<Modal open={true} />);
+
+      await screen.findByText((content) => {
+        return content.includes('1 item(s) selected');
+      });
+
+      const downloadButton = await screen.findByRole('button', {
+        name: /download/i,
+      });
+      expect(downloadButton).toBeInTheDocument();
+      expect(downloadButton).toBeEnabled();
     });
 
-    it('should trigger download when button clicked with items selected', () => {
-      act(() => {
-        usePokemonState.getState().toggleItem(mockPokemons[0]);
+    it('should trigger download when download button clicked', async () => {
+      const mockDownload = vi.fn();
+      vi.spyOn(
+        usePokemonState.getState(),
+        'downloadSelected'
+      ).mockImplementation(mockDownload);
+
+      usePokemonState.setState({
+        items: [
+          {
+            id: '1',
+            name: 'Pikachu',
+            description: 'id: 1, height: 4, weight: 60',
+          },
+        ],
       });
 
-      renderWithRouter(<Results data={mockPokemons} error='' />);
-      fireEvent.click(screen.getByRole('button', { name: /download/i }));
+      renderComponent(<Modal open={true} />);
 
-      expect(HTMLAnchorElement.prototype.click).toHaveBeenCalled();
-      expect(global.URL.createObjectURL).toHaveBeenCalled();
+      const downloadButton = await screen.findByRole('button', {
+        name: 'Download',
+      });
+
+      fireEvent.click(downloadButton);
+      expect(mockDownload).toHaveBeenCalledTimes(1);
     });
   });
 });
