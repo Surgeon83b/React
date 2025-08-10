@@ -8,10 +8,12 @@ type State = {
 type Action = {
   isEmpty: () => boolean;
   toggleItem: (item: ListCardProps) => void;
-  isSelected: (id: number) => boolean;
+  isSelected: (id: string) => boolean;
   clearItems: () => void;
   downloadSelected: () => void;
 };
+
+export type PokemonState = State & Action;
 
 export const usePokemonState = create<State & Action>((set, get) => ({
   items: [],
@@ -25,7 +27,7 @@ export const usePokemonState = create<State & Action>((set, get) => ({
           : [...state.items, checkedItem],
       };
     }),
-  isSelected: (id) => get().items.some((item) => item.id === id),
+  isSelected: (id: string) => get().items.some((item) => item.id === id),
   clearItems: () => set({ items: [] }),
   downloadSelected: () => {
     const { items } = get();

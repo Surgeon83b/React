@@ -1,42 +1,31 @@
-import { type ChangeEvent } from 'react';
-import { fetchData } from '@/api/fetch';
-import type { SearchData } from '@/types';
-import { getQueryString } from '@/helpers';
+import {type ChangeEvent} from 'react';
 import useLocalStorage from '@/hooks/useLocalStorage.ts';
 import './Search.css';
 
 interface SearchProps {
-  onSearch: (data: SearchData, error: string) => void;
-  resetParams: () => void;
+  onSearch: (search: string) => void;
 }
 
-export const Search = ({ onSearch, resetParams }: SearchProps) => {
-  const { search, setSearch, saveSearch } = useLocalStorage(handleSearch);
+export const Search = ({ onSearch }: SearchProps) => {
+  const { search, setSearch, saveSearch } = useLocalStorage();
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
 
-  function handleSearch(query: string) {
-    const timerId = setTimeout(async () => {
-      resetParams();
-      onSearch([], '');
-      try {
-        const { data, error } = await fetchData(query);
-        onSearch(data, error ?? '');
-      } catch (err) {
-        onSearch([], err instanceof Error ? err.message : 'Unknown error');
-      }
-    }, 500);
+  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
-    return () => clearTimeout(timerId);
-  }
-
-  const handleClick = () => {
-    const trimmedSearch = search.trim();
-    setSearch(trimmedSearch);
-    saveSearch(trimmedSearch);
-    handleSearch(getQueryString(trimmedSearch));
+  const handleSearch = () => {
+    const trimmedValue = search.trim();
+    setSearch(trimmedValue);
+    saveSearch(trimmedValue);
+    if (onSearch) {
+      onSearch(trimmedValue);
+    }
   };
 
   return (
@@ -45,8 +34,9 @@ export const Search = ({ onSearch, resetParams }: SearchProps) => {
         placeholder={'Type pokemon name or leave field empty'}
         value={search}
         onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
       />
-      <button onClick={handleClick}>Search</button>
+      <button type="button" onClick={handleSearch}>Search</button>
     </div>
   );
 };

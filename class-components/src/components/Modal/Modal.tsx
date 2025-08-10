@@ -1,8 +1,8 @@
 import './Modal.css';
 import { usePokemonState } from '@/store/store.ts';
-import { useEffect, useState } from 'react';
+import {memo, useEffect, useState} from 'react';
 
-export const Modal = ({ open }: { open: boolean }) => {
+export const Modal = memo(({ open }: { open: boolean }) => {
   const { items, clearItems, downloadSelected } = usePokemonState();
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
   const [isMounted, setIsMounted] = useState(open);
@@ -47,4 +47,4 @@ export const Modal = ({ open }: { open: boolean }) => {
       </div>
     </div>
   );
-};
+});

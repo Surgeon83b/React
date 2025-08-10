@@ -1,20 +1,20 @@
 import '../App.css';
 import Results from '../components/Results/Results.tsx';
 import { useState } from 'react';
-import type { SearchData } from '../types.ts';
-import { Search } from '@/components';
-import { useSearchParams } from 'react-router';
+import {Modal, Search} from '@/components';
+import {useSearchParams} from "react-router";
+import {usePokemonState} from "@/store/store.ts";
 
 export const MainPage = () => {
-  const [data, setData] = useState<SearchData>([]);
-  const [error, setError] = useState('');
+  const [search, setSearch] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const onSearch = (newData: SearchData, err: string) => {
-    const newParams = new URLSearchParams();
-    setSearchParams(newParams, { replace: true });
-    setData(newData);
-    setError(err);
+  const { isEmpty, clearItems } = usePokemonState();
+
+  const onSearch = (value: string) => {
+    clearItems();
+    setSearch(value);
+    setSearchParams({ page: '1' }, { replace: true });
   };
 
   const onSectionClick = () => {
@@ -25,14 +25,9 @@ export const MainPage = () => {
 
   return (
     <div className='flex wrapper full' onClick={onSectionClick}>
-      <Search
-        onSearch={onSearch}
-        resetParams={() => {
-          const newParams = new URLSearchParams();
-          setSearchParams(newParams, { replace: true });
-        }}
-      />
-      <Results data={data} error={error} />
+      <Search onSearch={onSearch} />
+      <Results searchQuery={search} />
+      <Modal open={!isEmpty()} />
     </div>
   );
 };

@@ -1,46 +1,50 @@
-import type { Pokemon } from '@/types.ts';
 import ListCard from '../ListCard.tsx';
 import Spinner from '../Spinner.tsx';
-import { PAGE_SIZE } from '@/components/constants.ts';
-import { useSearchParams } from 'react-router';
-import { useEffect } from 'react';
 import * as React from 'react';
-import { usePokemonState } from '@/store/store.ts';
-import { Modal } from '@/components';
 import './Results.css';
+import { useFetchPokemon, useFetchPokemons } from '@/api/queries.ts';
+import { extractIdFromUrl } from '@/helpers.ts';
+import { useSearchParams } from 'react-router';
+import {useEffect, useState} from 'react';
+import Paginator from "@/components/Paginator/Paginator.tsx";
 
-interface ResultProps {
-  data: Array<Pokemon> | undefined;
-  error: string;
-}
-
-export const Results = ({ data, error }: ResultProps) => {
+const Results = ({ searchQuery }: { searchQuery: string }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get('page')) || 1;
-
-  const { isEmpty } = usePokemonState();
+  const [lastSearchQuery, setLastSearchQuery] = useState(searchQuery);
 
   useEffect(() => {
-    if (data?.length && !searchParams.has('page')) {
+    if (searchQuery !== lastSearchQuery) {
+      setSearchParams({ page: '1' }, { replace: true });
+      setLastSearchQuery(searchQuery);
+    }
+  }, [searchQuery, lastSearchQuery, setSearchParams]);
+
+  const listQuery = useFetchPokemons(page);
+  const itemQuery = useFetchPokemon(searchQuery);
+
+  const { data, error, isFetching, refetch } = searchQuery ? itemQuery : listQuery;
+  const showPagination = !searchQuery && data && data.length > 1;
+
+  useEffect(() => {
+    if (!searchQuery && data?.length && !searchParams.has('page')) {
       setSearchParams({ page: '1' }, { replace: true });
     }
-  }, [data, searchParams, setSearchParams]);
+  }, [data, searchQuery, searchParams, setSearchParams]);
 
   if (error) {
-    return <div>{error}</div>;
+    return <div>{error.message}</div>;
   }
 
-  if (!data || !data.length) {
+  if (!data || isFetching) {
     return <Spinner />;
   }
-
-  const maxPage = Math.ceil((data?.length ?? 0) / PAGE_SIZE);
-  const dataPage = data?.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const onNext = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setSearchParams({ page: String(page + 1) });
   };
+
   const onPrev = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setSearchParams({ page: String(page - 1) });
@@ -48,7 +52,9 @@ export const Results = ({ data, error }: ResultProps) => {
 
   return (
     <div className='results'>
-      Results
+      <button className='refresh' onClick={() => refetch()}>
+        Refresh
+      </button>
       <div className='table-container'>
         <table>
           <thead>
@@ -59,32 +65,34 @@ export const Results = ({ data, error }: ResultProps) => {
             </tr>
           </thead>
           <tbody>
-            {dataPage.map((card) => (
-              <ListCard
-                key={card.id}
-                id={card.id}
-                name={card.name}
-                description={
-                  card.url ??
-                  `id: ${card.id}, height: ${card.height}, weight: ${card.weight}`
-                }
-              />
-            ))}
+            {data.map((card) => {
+              const isPokemonType = 'id' in card;
+              const id = isPokemonType
+                ? String(card.id)
+                : extractIdFromUrl(card?.url);
+              return (
+                <ListCard
+                  key={id}
+                  id={id}
+                  name={card.name}
+                  description={
+                    isPokemonType
+                      ? `id: ${card.id}, height: ${card.height}, weight: ${card.weight}`
+                      : card.url
+                  }
+                />
+              );
+            })}
           </tbody>
         </table>
       </div>
-      {maxPage > 1 && (
-        <div className='flex centered-flex gap-16'>
-          <button onClick={onPrev} disabled={page === 1}>
-            {'<'}
-          </button>
-          {`Page ${page}`}
-          <button onClick={onNext} disabled={page === maxPage}>
-            {'>'}
-          </button>
-        </div>
+      {showPagination && (
+        <Paginator
+          page={page}
+          onPrev={onPrev}
+          onNext={onNext}
+        />
       )}
-      <Modal open={!isEmpty()}/>
     </div>
   );
 };

@@ -1,16 +1,13 @@
 import { useSearchParams } from 'react-router';
-import { useEffect, useState } from 'react';
 import Spinner from '@/components/Spinner.tsx';
-import { fetchData } from '@/api/fetch.ts';
-import type { Pokemon } from '@/types.ts';
-import { getQueryString } from '@/helpers.ts';
-import Card from "@/components/Card.tsx";
+import Card from '@/components/Card.tsx';
+import { useFetchPokemonInfo } from '@/api/queries.ts';
 
 export const Details = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const detailsId = searchParams.get('details');
 
-  const [details, setDetails] = useState<Pokemon | null>(null);
+  const { data, error, isLoading } = useFetchPokemonInfo(detailsId || '');
 
   const handleClose = () => {
     const newParams = new URLSearchParams(searchParams);
@@ -18,23 +15,18 @@ export const Details = () => {
     setSearchParams(newParams);
   };
 
-  useEffect(() => {
-    if (detailsId) {
-      const fetchDetails = async () => {
-        const response = await fetchData(getQueryString(detailsId));
-        if (response.data) setDetails(response.data[0]);
-      };
-      fetchDetails();
-    }
-  }, [detailsId]);
-
-  if (!detailsId) return null;
-  if (!details) return <Spinner />;
+  if (!detailsId || error) return null;
 
   return (
     <div className='details-content'>
-      <Card {...details}/>
-      <button onClick={handleClose}>Close</button>
+      {isLoading || !data ? (
+        <Spinner />
+      ) : (
+        <>
+          <Card {...data} />
+          <button onClick={handleClose}>Close</button>
+        </>
+      )}
     </div>
   );
 };

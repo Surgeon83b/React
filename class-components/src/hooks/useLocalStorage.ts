@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { getQueryString } from '@/helpers.ts';
 
 type FromLocalStorage = {
   search: string;
@@ -7,17 +6,11 @@ type FromLocalStorage = {
   saveSearch: (s: string) => void;
 };
 
-const UseLocalStorage = (
-  handleSearch: (s: string) => void
-): FromLocalStorage => {
-  const [search, setSearch] = useState(() => {
-    const savedSearch = localStorage.getItem('search') || '';
-    handleSearch(getQueryString(savedSearch));
-    return savedSearch;
-  });
-
+const UseLocalStorage = (): FromLocalStorage => {
+  const [search, setSearch] = useState(
+    () => localStorage.getItem('search') || ''
+  );
   const saveSearch = (s: string) => localStorage.setItem('search', s);
-
   return { search, setSearch, saveSearch };
 };
 

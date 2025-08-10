@@ -14,15 +14,10 @@ export type State = {
   data?: Pokemon[];
 };
 
-export type SearchData = Array<Pokemon> | undefined;
 
-export type FetchData = {
-  data: SearchData;
-  error?: string;
-};
 
 export interface ListCardProps {
-  id: number;
+  id: string;
   name: string;
   description: string;
 }
@@ -33,3 +28,9 @@ export type ThemeContextType = {
   theme: Theme;
   toggleTheme: () => void;
 };
+
+export type PokemonInfo = {
+  name: string;
+  url: string;
+};
+
