@@ -17,8 +17,6 @@ export type State = {
   data?: Pokemon[];
 };
 
-
-
 export interface ListCardProps {
   id: string;
   name: string;

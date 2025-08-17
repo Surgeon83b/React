@@ -4,16 +4,17 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Card from '@/components/Card.tsx';
 import { useFetchPokemonInfo } from '@/api/queries.ts';
 import { Spinner } from '@/components';
+import { getSearchParams } from '@/helpers.ts';
 
 export const Details = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const detailsId = searchParams.get('details');
+  const detailsId = searchParams?.get('details');
 
-  const { data, error, isLoading } = useFetchPokemonInfo(detailsId || '');
+  const { data, error, isLoading } = useFetchPokemonInfo(detailsId ?? '');
 
   const handleClose = () => {
-    const newParams = new URLSearchParams(searchParams);
+    const newParams = getSearchParams(searchParams);
     newParams.delete('details');
     router.push(`?${newParams.toString()}`);
   };

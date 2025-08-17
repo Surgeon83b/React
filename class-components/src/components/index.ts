@@ -6,4 +6,5 @@ export { Modal } from './Modal/Modal';
 export { ThemeToggle } from './ThemeToggle';
 export { Spinner } from './Spinner';
 export { default as ListCard } from './ListCard';
-export {Paginator} from './Paginator/Paginator';
+export { Paginator } from './Paginator/Paginator';
+export { ErrorBoundary } from './ErrorBoundary';

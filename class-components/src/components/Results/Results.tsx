@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { extractIdFromUrl } from '@/helpers';
+import {extractIdFromUrl, getSearchParams, isPokemon} from '@/helpers';
 import { Spinner, ListCard, Paginator } from '@/components';
 import { useFetchPokemon, useFetchPokemons } from '@/api/queries';
 import { keepPreviousData } from '@tanstack/react-query';
@@ -11,7 +11,7 @@ import type { Pokemon, PokemonBase } from '@/types';
 interface ResultsProps {
   initialData?: Array<Pokemon | PokemonBase>;
   initialSearchQuery?: string;
-  initialPage?: number;
+  initialPage: number;
 }
 
 export const Results = ({
@@ -24,8 +24,8 @@ export const Results = ({
   const searchParams = useSearchParams();
 
   const [isMounted, setIsMounted] = useState(false);
-  const page = Number(searchParams.get('page')) || initialPage;
-  const searchQuery = searchParams.get('search') || initialSearchQuery;
+  const page = Number(searchParams?.get('page')) || initialPage;
+  const searchQuery = searchParams?.get('search') || initialSearchQuery;
   const [lastSearchQuery, setLastSearchQuery] = useState(searchQuery);
 
   const shouldUseClientData = isMounted && typeof window !== 'undefined';
@@ -38,35 +38,35 @@ export const Results = ({
 
   const itemQuery = useFetchPokemon(searchQuery, {
     enabled: shouldUseClientData && !!searchQuery,
-    initialData: searchQuery ? [initialData[0]] : undefined,
+    initialData: searchQuery && initialData.length > 0
+      ? [initialData[0]]
+      : undefined
   });
 
   const {
-    data = initialData,
+    data =initialData,
     error,
     isFetching,
     refetch,
   } = searchQuery ? itemQuery : listQuery;
 
+  const params = getSearchParams(searchParams);
   const showPagination = !searchQuery && data.length > 1;
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Синхронизация URL при изменении поиска
   useEffect(() => {
     if (searchQuery !== lastSearchQuery) {
-      const params = new URLSearchParams(searchParams.toString());
       params.set('page', '1');
       params.set('search', searchQuery);
       router.replace(`${pathname}?${params.toString()}`);
       setLastSearchQuery(searchQuery);
     }
-  }, [searchQuery, lastSearchQuery, pathname, router, searchParams]);
+  }, [searchQuery, lastSearchQuery, pathname, router, searchParams, params]);
 
   const updatePage = (newPage: number) => {
-    const params = new URLSearchParams(searchParams.toString());
     params.set('page', String(newPage));
     router.push(`${pathname}?${params.toString()}`);
   };
@@ -100,10 +100,8 @@ export const Results = ({
           </thead>
           <tbody>
             {data.map((card) => {
-              const isPokemonType = 'id' in card;
-              const id = isPokemonType
-                ? String(card.id)
-                : extractIdFromUrl(card.url ?? '');
+              const isPokemonInfo = isPokemon(card);
+              const id = isPokemonInfo ? String(card.id) : extractIdFromUrl(card.url ?? '');
 
               return (
                 <ListCard
@@ -111,7 +109,7 @@ export const Results = ({
                   id={id}
                   name={card.name}
                   description={
-                    isPokemonType
+                    isPokemonInfo
                       ? `id: ${card.id}, height: ${card.height}, weight: ${card.weight}`
                       : (card.url ?? '')
                   }

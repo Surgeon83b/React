@@ -1,27 +1,22 @@
-import { fetchPokemon, fetchPokemons } from '@/api/fetchData.ts';
-import { Results } from '@/components/Results/Results.tsx';
-import { Details, Modal, Search } from '@/components';
+import { Suspense } from 'react';
+import { Spinner } from '@/components/Spinner';
+import { PokemonList } from '@/components/PokemonList';
+import { Details, Modal } from '@/components';
+import { fetchPokemons } from '@/api/fetchData.ts';
 
 export default async function MainPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | undefined };
+  searchParams: { page?: string; search?: string };
 }) {
-  const page = Number(searchParams.page) || 1;
-  const searchQuery = searchParams.search || '';
-
-  const initialData = searchQuery
-    ? [await fetchPokemon(searchQuery).catch(() => [])]
-    : await fetchPokemons(page).catch(() => []);
+  const initialPage = Number(searchParams.page) || 1;
+  const initialPokemons = await fetchPokemons(initialPage);
 
   return (
     <div className='wrapper'>
-      <Search initialSearchValue={searchQuery} />
-      <Results
-        initialData={initialData}
-        initialSearchQuery={searchQuery}
-        initialPage={page}
-      />
+      <Suspense fallback={<Spinner />}>
+        <PokemonList initialData={initialPokemons} initialPage={initialPage}/>
+      </Suspense>
       <Details />
       <Modal />
     </div>

@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
+import {getSearchParams} from "@/helpers.ts";
 
 const Search = ({ initialSearchValue = '' }: { initialSearchValue?: string }) => {
   const router = useRouter();
@@ -10,7 +11,7 @@ const Search = ({ initialSearchValue = '' }: { initialSearchValue?: string }) =>
 
   const handleSearch = () => {
     const trimmedValue = search.trim();
-    const params = new URLSearchParams(searchParams.toString());
+    const params = getSearchParams(searchParams);
     params.set('search', trimmedValue);
     params.set('page', '1');
     router.push(`/?${params.toString()}`);

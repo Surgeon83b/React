@@ -10,7 +10,10 @@ const nextConfig = {
     ],
     unoptimized: true, // Отключаем оптимизацию изображений для экспорта
   },
-  // output: 'export', // Раскомментируйте, если делаете статический экспорт
+  trailingSlash: true,
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
 }
 
 export default nextConfig

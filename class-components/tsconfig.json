@@ -35,9 +35,6 @@
       }
     ],
     "types": [
-      "@testing-library/jest-dom",
-      "vitest/globals",
-      "next/type"
     ],
     "typeRoots": [
       "node_modules/@types",

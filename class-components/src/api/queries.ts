@@ -5,7 +5,7 @@ import {
   type UseQueryOptions,
 } from '@tanstack/react-query';
 import {fetchPokemon, fetchPokemonInfo, fetchPokemons} from '@/api/fetchData.ts';
-import {STALE_POKEMON_TIME, STALE_POKEMONS_TIME} from "@/constants.ts";
+import {STALE_POKEMON_TIME} from "@/constants.ts";
 
 const defaultOptions = {
   queries: {
@@ -20,7 +20,7 @@ export const useFetchPokemons = (
   const pokemonsQueryOptions = queryOptions({
     queryKey: ['pokemons', page],
     queryFn: () => fetchPokemons(page),
-    staleTime: STALE_POKEMONS_TIME,
+    staleTime: 0,
     ...defaultOptions,
     ...options,
     ...(options?.initialData ? { placeholderData: undefined } : { placeholderData: keepPreviousData })

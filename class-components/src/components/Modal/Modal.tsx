@@ -10,6 +10,8 @@ export const Modal = memo(() => {
   const [isMounted, setIsMounted] = useState(false);
   const [closeDuration, setCloseDuration] = useState('0.3s');
 
+  const empty = isEmpty();
+
   useEffect(() => {
     const duration = getComputedStyle(document.documentElement)
       .getPropertyValue('--animation-duration')
@@ -18,7 +20,7 @@ export const Modal = memo(() => {
   }, []);
 
   useEffect(() => {
-    if (!isEmpty()) {
+    if (!empty) {
       setIsMounted(true);
       setIsAnimatingOut(false);
     } else {
@@ -32,7 +34,7 @@ export const Modal = memo(() => {
 
       return () => clearTimeout(timer);
     }
-  }, [isEmpty(), closeDuration]);
+  }, [empty, closeDuration]);
 
   if (!isMounted) {
     return null;

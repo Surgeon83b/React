@@ -3,6 +3,7 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import { usePokemonState } from '@/store/store';
 import type { ListCardProps } from '@/types';
+import {getSearchParams} from "@/helpers.ts";
 
 const ListCard = ({ id, name, description }: ListCardProps) => {
   const router = useRouter();
@@ -11,7 +12,7 @@ const ListCard = ({ id, name, description }: ListCardProps) => {
   const checked = isSelected(id);
 
   const setParams = () => {
-    const newParams = new URLSearchParams(searchParams.toString());
+    const newParams = getSearchParams(searchParams);
     newParams.set('details', id);
     router.push(`?${newParams.toString()}`);
   };

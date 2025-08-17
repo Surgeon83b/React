@@ -1,5 +1,30 @@
+[build]
+  command = "npm run build"
+  publish = "out"
+  functions = "functions"  # Если используете API-роуты
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    Cache-Control = "public, max-age=3600"
+
+# Для обработки 404 в SPA
 [[redirects]]
   from = "/404"
   to = "/index.html"
   status = 404
+  force = true
+
+# Редиректы для Next.js специфики
+[[redirects]]
+  from = "/_next/static/*"
+  to = "/_next/static/:splat"
+  status = 200
   force = true
