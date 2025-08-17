@@ -3,3 +3,7 @@ export { Results } from './Results';
 export { default as ErrorPage } from './ErrorPage';
 export { Details } from './Details';
 export { Modal } from './Modal/Modal';
+export { ThemeToggle } from './ThemeToggle';
+export { Spinner } from './Spinner';
+export { default as ListCard } from './ListCard';
+export {Paginator} from './Paginator/Paginator';

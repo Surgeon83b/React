@@ -1,18 +1,24 @@
+'use client';
+
 import './Modal.css';
 import { usePokemonState } from '@/store/store.ts';
-import {memo, useEffect, useState} from 'react';
+import { memo, useEffect, useState } from 'react';
 
-export const Modal = memo(({ open }: { open: boolean }) => {
-  const { items, clearItems, downloadSelected } = usePokemonState();
+export const Modal = memo(() => {
+  const { items, clearItems, downloadSelected, isEmpty } = usePokemonState();
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
-  const [isMounted, setIsMounted] = useState(open);
-
-  const closeDuration = getComputedStyle(
-    document.documentElement
-  ).getPropertyValue('--animation-duration');
+  const [isMounted, setIsMounted] = useState(false);
+  const [closeDuration, setCloseDuration] = useState('0.3s');
 
   useEffect(() => {
-    if (open) {
+    const duration = getComputedStyle(document.documentElement)
+      .getPropertyValue('--animation-duration')
+      .trim() || '0.3s';
+    setCloseDuration(duration);
+  }, []);
+
+  useEffect(() => {
+    if (!isEmpty()) {
       setIsMounted(true);
       setIsAnimatingOut(false);
     } else {
@@ -26,7 +32,7 @@ export const Modal = memo(({ open }: { open: boolean }) => {
 
       return () => clearTimeout(timer);
     }
-  }, [open, closeDuration]);
+  }, [isEmpty(), closeDuration]);
 
   if (!isMounted) {
     return null;

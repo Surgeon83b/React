@@ -1,7 +1,7 @@
 import { beforeEach, afterEach, describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Search from './Search';
+import Search3 from './Search3.tsx';
 import '@testing-library/jest-dom/vitest';
 
 const mockOnSearch = vi.fn();
@@ -11,7 +11,7 @@ const defaultProps = {
   resetParams: mockOnSearch,
 };
 
-describe('Search Component: Rendering', () => {
+describe('Search3 Component: Rendering', () => {
   beforeEach(() => {
     vi.spyOn(Storage.prototype, 'getItem').mockReturnValue('');
     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {});
@@ -23,7 +23,7 @@ describe('Search Component: Rendering', () => {
 
   // 1. Тест на рендеринг с переданными пропсами
   it('renders correctly with provided props', () => {
-    render(<Search {...defaultProps} />);
+    render(<Search3 {...defaultProps} />);
 
     const button = screen.getByRole('button', { name: /search/i });
     expect(button).toBeInTheDocument();
@@ -34,7 +34,7 @@ describe('Search Component: Rendering', () => {
     // Временная перезапись мока только для этого теста
     vi.spyOn(Storage.prototype, 'getItem').mockReturnValue('pikachu');
 
-    render(<Search {...defaultProps} />);
+    render(<Search3 {...defaultProps} />);
 
     const input = screen.getByRole('textbox');
     expect(input).toHaveValue('pikachu');
@@ -44,14 +44,14 @@ describe('Search Component: Rendering', () => {
   it('should show empty input when no saved term exists', () => {
     vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(null);
 
-    render(<Search {...defaultProps} />);
+    render(<Search3 {...defaultProps} />);
 
     const input = screen.getByRole('textbox');
     expect(input).toHaveValue('');
   });
 });
 
-describe('Search Component: User events', () => {
+describe('Search3 Component: User events', () => {
   beforeEach(() => {
     vi.spyOn(Storage.prototype, 'getItem').mockImplementation((key) => {
       if (key === 'search') {
@@ -69,7 +69,7 @@ describe('Search Component: User events', () => {
 
   it('updates input value when user types', async () => {
     const user = userEvent.setup();
-    render(<Search {...defaultProps} />);
+    render(<Search3 {...defaultProps} />);
 
     const input = screen.getByRole('textbox');
 
@@ -88,7 +88,7 @@ describe('Search Component: User events', () => {
     const user = userEvent.setup();
     const testQuery = 'new search query';
 
-    render(<Search {...defaultProps} />);
+    render(<Search3 {...defaultProps} />);
 
     const input = screen.getByRole('textbox');
     const button = screen.getByRole('button', { name: /search/i });
@@ -103,7 +103,7 @@ describe('Search Component: User events', () => {
 
   it('should save trimmed value to localStorage on button click', async () => {
     const user = userEvent.setup();
-    render(<Search {...defaultProps} />);
+    render(<Search3 {...defaultProps} />);
 
     const input = screen.getByRole('textbox');
     const button = screen.getByRole('button', { name: /search/i });

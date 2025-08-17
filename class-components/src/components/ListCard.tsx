@@ -1,17 +1,19 @@
-import { useSearchParams } from 'react-router';
-import * as React from 'react';
-import type { ListCardProps } from '@/types.ts';
-import { usePokemonState } from '@/store/store.ts';
+'use client';
+
+import { useSearchParams, useRouter } from 'next/navigation';
+import { usePokemonState } from '@/store/store';
+import type { ListCardProps } from '@/types';
 
 const ListCard = ({ id, name, description }: ListCardProps) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { toggleItem, isSelected } = usePokemonState();
   const checked = isSelected(id);
 
   const setParams = () => {
-    const newParams = new URLSearchParams(searchParams);
+    const newParams = new URLSearchParams(searchParams.toString());
     newParams.set('details', id);
-    setSearchParams(newParams);
+    router.push(`?${newParams.toString()}`);
   };
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {

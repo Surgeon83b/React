@@ -1,13 +1,16 @@
-export type Pokemon = {
+export interface PokemonBase {
   name: string;
-  id: number;
   url?: string;
+}
+
+export interface Pokemon extends PokemonBase {
+  id?: number;
   height?: number;
   weight?: number;
   sprites?: {
     front_default: string;
   };
-};
+}
 
 export type State = {
   search: string;
@@ -29,8 +32,5 @@ export type ThemeContextType = {
   toggleTheme: () => void;
 };
 
-export type PokemonInfo = {
-  name: string;
-  url: string;
-};
+
 

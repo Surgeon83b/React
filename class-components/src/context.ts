@@ -1,3 +1,5 @@
+'use client';
+
 import type { ThemeContextType } from '@/types.ts';
 import { createContext } from 'react';
 

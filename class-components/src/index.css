@@ -1,5 +1,12 @@
-:root.light { --bg: white; --text: black; }
-:root.dark { --bg: black; --text: white; }
+:root.light {
+  --bg: white;
+  --text: black;
+}
+
+:root.dark {
+  --bg: black;
+  --text: white;
+}
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -213,8 +220,8 @@ img {
 header {
   display: flex;
   justify-content: space-around;
-  position: fixed;
-  left:0;
+  align-items: center;
+  left: 0;
   width: 100%;
   margin: 16px;
 }
@@ -237,7 +244,7 @@ header {
 .close::after {
   content: '';
   position: absolute;
-  left:50%;
+  left: 50%;
   top: 50%;
   width: 75%;
   height: 1px;

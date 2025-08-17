@@ -4,13 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint ./src",
     "lint:fix": "npx eslint --fix --ext js,ts,tsx .",
-    "preview": "vite preview",
     "format:fix": "prettier --write .",
     "prepare": "husky"
   },
@@ -19,10 +19,10 @@
     "@tanstack/react-query": "^5.84.1",
     "@tanstack/react-query-devtools": "^5.84.1",
     "@testing-library/user-event": "^14.6.1",
+    "next": "^15.4.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router": "^7.7.0",
-    "react-router-dom": "^7.8.0",
     "zustand": "^5.0.6"
   },
   "devDependencies": {
@@ -35,7 +35,6 @@
     "@types/node": "^24.0.14",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react": "^4.6.0",
     "@vitest/coverage-v8": "^3.2.4",
     "eslint": "^9.30.1",
     "eslint-config-prettier": "^10.1.5",
@@ -54,7 +53,6 @@
     "ts-node": "^10.9.2",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.35.1",
-    "vite": "^7.0.3",
     "vitest": "^3.2.4"
   },
   "lint-staged": {

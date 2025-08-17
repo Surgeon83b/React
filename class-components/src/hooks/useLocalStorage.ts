@@ -1,17 +1,24 @@
-import { useState } from 'react';
+'use client';
 
-type FromLocalStorage = {
+import { useState, useEffect } from 'react';
+
+interface FromLocalStorage {
   search: string;
-  setSearch: (s: string) => void;
-  saveSearch: (s: string) => void;
-};
+  setSearch: (value: string) => void;
+  saveSearch: (value: string) => void;
+}
 
-const UseLocalStorage = (): FromLocalStorage => {
-  const [search, setSearch] = useState(
-    () => localStorage.getItem('search') || ''
-  );
-  const saveSearch = (s: string) => localStorage.setItem('search', s);
+export const useLocalStorage = (): FromLocalStorage => {
+  const [search, setSearch] = useState<string>('');
+
+  useEffect(() => {
+    setSearch(localStorage.getItem('search') || '');
+  }, []);
+
+  const saveSearch = (s: string) => {
+    localStorage.setItem('search', s);
+    setSearch(s);
+  };
+
   return { search, setSearch, saveSearch };
 };
-
-export default UseLocalStorage;

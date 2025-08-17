@@ -7,7 +7,7 @@ type PaginatorProps = {
   onNext: (e: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
-const Paginator = ({ page, onPrev, onNext }: PaginatorProps) => {
+export const Paginator = ({ page, onPrev, onNext }: PaginatorProps) => {
   return (
     <div className='flex centered-flex gap-16'>
       <button onClick={onPrev} disabled={page === 1}>
@@ -20,5 +20,3 @@ const Paginator = ({ page, onPrev, onNext }: PaginatorProps) => {
     </div>
   );
 };
-
-export default Paginator;
