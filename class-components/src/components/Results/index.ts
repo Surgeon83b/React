@@ -1,1 +1,1 @@
-export { default as Results } from './Results';
+export { Results } from './Results.tsx';

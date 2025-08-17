@@ -1,18 +1,22 @@
-import { useSearchParams } from 'react-router';
-import Spinner from '@/components/Spinner.tsx';
+'use client';
+
+import { useSearchParams, useRouter } from 'next/navigation';
 import Card from '@/components/Card.tsx';
 import { useFetchPokemonInfo } from '@/api/queries.ts';
+import { Spinner } from '@/components';
+import { getSearchParams } from '@/helpers.ts';
 
 export const Details = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const detailsId = searchParams.get('details');
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const detailsId = searchParams?.get('details');
 
-  const { data, error, isLoading } = useFetchPokemonInfo(detailsId || '');
+  const { data, error, isLoading } = useFetchPokemonInfo(detailsId ?? '');
 
   const handleClose = () => {
-    const newParams = new URLSearchParams(searchParams);
+    const newParams = getSearchParams(searchParams);
     newParams.delete('details');
-    setSearchParams(newParams);
+    router.push(`?${newParams.toString()}`);
   };
 
   if (!detailsId || error) return null;

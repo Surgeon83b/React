@@ -9,7 +9,7 @@ import {
 import { vi } from 'vitest';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { usePokemonState, type PokemonState } from '@/store/store';
-import { Modal, Results } from '@/components';
+import { Modal, Results3 } from '@/components';
 
 vi.mock('@tanstack/react-query', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@tanstack/react-query')>();
@@ -66,7 +66,7 @@ describe('Modal Component Tests', () => {
 
   describe('Item Selection', () => {
     it('should toggle item selection when clicking checkboxes', async () => {
-      renderComponent(<Results searchQuery="" />);
+      renderComponent(<Results3 searchQuery="" />);
 
       await screen.findByRole('table');
       const checkboxes = await screen.findAllByRole('checkbox');

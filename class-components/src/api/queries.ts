@@ -1,29 +1,29 @@
-import type { PokemonInfo} from '@/types.ts';
+import type {Pokemon, PokemonBase} from '@/types.ts';
 import {
   keepPreviousData, queryOptions,
   useQuery,
   type UseQueryOptions,
 } from '@tanstack/react-query';
 import {fetchPokemon, fetchPokemonInfo, fetchPokemons} from '@/api/fetchData.ts';
-import {STALE_POKEMON_TIME, STALE_POKEMONS_TIME} from "@/constants.ts";
+import {STALE_POKEMON_TIME} from "@/constants.ts";
 
 const defaultOptions = {
   queries: {
-    retry: false, // Отключает повторы для всех запросов
+    retry: false,
   },
 }
 
 export const useFetchPokemons = (
   page: number,
-  options?: UseQueryOptions<PokemonInfo[], Error>
+  options?: Partial<UseQueryOptions<PokemonBase[], Error>>
 ) => {
   const pokemonsQueryOptions = queryOptions({
     queryKey: ['pokemons', page],
     queryFn: () => fetchPokemons(page),
-    staleTime: STALE_POKEMONS_TIME,
-    placeholderData: keepPreviousData,
+    staleTime: 0,
     ...defaultOptions,
-    ...options
+    ...options,
+    ...(options?.initialData ? { placeholderData: undefined } : { placeholderData: keepPreviousData })
   });
 
   return useQuery(pokemonsQueryOptions);
@@ -42,14 +42,15 @@ export const useFetchPokemonInfo = (id: string)=>{
   return useQuery(pokemonQueryOptions);
 }
 
-export const useFetchPokemon = (name: string)=>{
+export const useFetchPokemon = (name: string, options?: Partial<UseQueryOptions<Pokemon[], Error>>)=>{
   const pokemonQueryOptions = queryOptions({
     queryKey: ['pokemon', name],
     queryFn: () => fetchPokemon(name),
     enabled: !!name,
-    placeholderData: keepPreviousData,
     staleTime: 0,
     ...defaultOptions,
+    ...options,
+    ...(options?.initialData ? { placeholderData: undefined } : { placeholderData: keepPreviousData })
   });
 
   return useQuery(pokemonQueryOptions);

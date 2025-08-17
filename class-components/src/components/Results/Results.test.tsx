@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Results from './Results';
+import Results from './Results3.tsx';
 import type { Pokemon } from '@/types.ts';
 import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -19,7 +19,7 @@ vi.mock('@tanstack/react-query', async () => {
   };
 });
 
-describe('Results Component', () => {
+describe('Results3 Component', () => {
   const mockPokemonData: Pokemon[] = [
     {
       id: 1,

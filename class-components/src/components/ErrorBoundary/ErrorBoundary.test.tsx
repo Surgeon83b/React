@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { ErrorBoundary } from './ErrorBoundary.tsx';
+import { ErrorBoundary } from '@/components';
 
 const BuggyComponent = () => {
   throw new Error('Test error!');

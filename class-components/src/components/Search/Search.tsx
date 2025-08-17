@@ -1,40 +1,29 @@
-import {type ChangeEvent} from 'react';
-import useLocalStorage from '@/hooks/useLocalStorage.ts';
-import './Search.css';
+'use client';
 
-interface SearchProps {
-  onSearch: (search: string) => void;
-}
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import {getSearchParams} from "@/helpers.ts";
 
-export const Search = ({ onSearch }: SearchProps) => {
-  const { search, setSearch, saveSearch } = useLocalStorage();
-
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-  };
-
-  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  };
+const Search = ({ initialSearchValue = '' }: { initialSearchValue?: string }) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [search, setSearch] = useState(initialSearchValue);
 
   const handleSearch = () => {
     const trimmedValue = search.trim();
-    setSearch(trimmedValue);
-    saveSearch(trimmedValue);
-    if (onSearch) {
-      onSearch(trimmedValue);
-    }
+    const params = getSearchParams(searchParams);
+    params.set('search', trimmedValue);
+    params.set('page', '1');
+    router.push(`/?${params.toString()}`);
   };
 
   return (
     <div className='flex space-between search'>
       <input
-        placeholder={'Type pokemon name or leave field empty'}
+        placeholder='Type pokemon name or leave field empty'
         value={search}
-        onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
+        onChange={(e) => setSearch(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
       />
       <button type="button" onClick={handleSearch}>Search</button>
     </div>
