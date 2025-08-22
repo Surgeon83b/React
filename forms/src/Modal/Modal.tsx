@@ -1,13 +1,13 @@
 import {useEffect, useCallback, type PropsWithChildren} from 'react';
-import { createPortal } from 'react-dom';
+import {createPortal} from 'react-dom';
 import './Modal.css';
 
-type ModalProps = PropsWithChildren <{
+type ModalProps = PropsWithChildren<{
   isOpen: boolean;
-  onClose: ()=>void;
+  onClose: () => void;
 }>
 
-export const Modal = ({ isOpen, onClose, children }:ModalProps) => {
+export const Modal = ({isOpen, onClose, children}: ModalProps) => {
   const handleEscape = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') {
       onClose();

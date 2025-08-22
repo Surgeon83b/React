@@ -1,0 +1,24 @@
+.profile-data {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.data-field {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.data-field.modified {
+  border-color: #ffa500;
+  background-color: #fffaf0;
+  box-shadow: 0 0 5px rgba(255, 165, 0, 0.2);
+}
+
+.data-field label {
+  font-weight: bold;
+  margin-right: 10px;
+}
