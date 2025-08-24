@@ -42,7 +42,7 @@ const initialState: CountryState = {
   error: null,
 };
 
-const countrySlice = createSlice({
+const countriesSlice = createSlice({
   name: 'countries',
   initialState,
   reducers: {},
@@ -63,4 +63,4 @@ const countrySlice = createSlice({
   },
 });
 
-export default countrySlice.reducer;
+export default countriesSlice.reducer;

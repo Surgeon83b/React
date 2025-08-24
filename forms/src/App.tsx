@@ -6,7 +6,7 @@ import UncontrolledForm from './Forms/UncontrolledForm.tsx';
 import SubmittedData from './SubmittedData/SubmittedData.tsx';
 import { type RootState, useAppDispatch, useAppSelector } from './store';
 import { ControlledForm } from './Forms/ControlledForm.tsx';
-import { fetchCountries } from './store/countrySlice.ts';
+import { fetchCountries } from './store/countriesSlice.ts';
 
 function App() {
   const [formType, setFormType] = useState<FormType | null>(null);

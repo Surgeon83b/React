@@ -1,13 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
-import countryReducer from './countrySlice';
+import countryReducer from './countriesSlice';
 import formReducer from './formSlice';
-import {type TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
+import {
+  type TypedUseSelectorHook,
+  useDispatch,
+  useSelector,
+} from 'react-redux';
 
 export const store = configureStore({
   reducer: {
     countries: countryReducer,
     form: formReducer,
-  }
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

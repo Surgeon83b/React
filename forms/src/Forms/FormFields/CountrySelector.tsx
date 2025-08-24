@@ -36,6 +36,7 @@ const CountrySelector = ({
         ref={ref}
         id="country"
         name={name}
+        data-testid="country"
         list="country-list"
         value={value}
         onChange={onCountryChange ? handleInputChange : undefined}

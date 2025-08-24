@@ -57,6 +57,7 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
       country: formData.get('country') as string,
     };
 
+    console.log('Form values:', formValues); // ← ДОБАВЬТЕ ЭТО
     try {
       const validatedData = formInputSchema(
         countries.map((country) => country.name)
@@ -65,14 +66,18 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
 
       dispatch(submitFormData(validatedData)).then(onClose);
     } catch (error) {
+      console.log('Validation error:', error); // ← ДОБАВЬТЕ ЭТО
       if (error instanceof z.ZodError) {
+        console.log('ZodError issues:', error.issues); // ← ДОБАВЬТЕ ЭТО
         const newErrors: Record<string, string> = {};
         error.issues.forEach((issue) => {
           if (issue.path && issue.path.length > 0) {
             const fieldName = String(issue.path[0]);
+            console.log(`Setting error for ${fieldName}:`, issue.message); // ← Добавьте это
             newErrors[fieldName] = issue.message;
           }
         });
+        console.log('New errors object:', newErrors);
         setErrors(newErrors);
       }
     }
@@ -86,6 +91,8 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
     setPasswordStrength('');
     dispatch(resetForm());
   };
+
+  console.log(errors.email);
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="form-container">
@@ -111,7 +118,11 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
           min="0"
           className={errors.age ? 'error' : ''}
         />
-        {errors.age && <span className="error-message">{errors.age}</span>}
+        {errors.age && (
+          <span className="error-message" data-testid="age-error">
+            {errors.age}
+          </span>
+        )}
       </div>
 
       <div className="form-group">
@@ -122,7 +133,11 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
           name="email"
           className={errors.email ? 'error' : ''}
         />
-        {errors.email && <span className="error-message">{errors.email}</span>}
+        {errors.email && (
+          <span className="error-message" data-testid="email-error">
+            {errors.email}
+          </span>
+        )}
       </div>
 
       <div className="form-group">
@@ -131,6 +146,7 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
           type="password"
           id="password"
           name="password"
+          data-testid="password"
           onChange={handlePasswordChange}
           className={errors.password ? 'error' : ''}
         />
@@ -153,6 +169,7 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
           type="password"
           id="confirmPassword"
           name="confirmPassword"
+          data-testid="confirmPassword"
           className={errors.confirmPassword ? 'error' : ''}
         />
         {errors.confirmPassword && (
@@ -164,15 +181,33 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
         <label>Gender:</label>
         <div className="radio-group">
           <label htmlFor="male">
-            <input type="radio" id="male" name="gender" value="male" />
+            <input
+              type="radio"
+              id="male"
+              name="gender"
+              value="male"
+              data-testid="male"
+            />
             Male
           </label>
           <label htmlFor="female">
-            <input type="radio" id="female" name="gender" value="female" />
+            <input
+              type="radio"
+              id="female"
+              name="gender"
+              value="female"
+              data-testid="female"
+            />
             Female
           </label>
           <label htmlFor="other">
-            <input type="radio" id="other" name="gender" value="other" />
+            <input
+              type="radio"
+              id="other"
+              name="gender"
+              value="other"
+              data-testid="other"
+            />
             Other
           </label>
         </div>
@@ -193,6 +228,7 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
           type="file"
           id="picture"
           name="picture"
+          data-testid="picture"
           accept=".jpg,.jpeg,.png"
           className={errors.picture ? 'error' : ''}
         />
@@ -207,6 +243,7 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
             type="checkbox"
             id="acceptTerms"
             name="acceptTerms"
+            data-testid="acceptTerms"
             className={errors.acceptTerms ? 'error' : ''}
           />
           I accept the Terms and Conditions
