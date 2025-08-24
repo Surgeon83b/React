@@ -1,30 +1,30 @@
-import React, {useRef, useEffect, useState} from 'react';
-import {z} from 'zod';
-import {formInputSchema} from '../validationSchema';
-import {fetchCountries} from '../store/countrySlice';
-import {submitFormData} from '../store/formThunk';
-import {resetForm} from '../store/formSlice';
-import {useAppDispatch, type RootState, useAppSelector} from '../store';
-import type {FormData} from '../types';
+import React, { useRef, useEffect, useState } from 'react';
+import { z } from 'zod';
+import { formInputSchema } from '../validationSchema';
+import { submitFormData } from '../store/formThunk';
+import { resetForm } from '../store/formSlice';
+import { useAppDispatch, type RootState, useAppSelector } from '../store';
+import type { FormData } from '../types';
 import './Form.css';
-import CountrySelector from "./FormFields/CountrySelector.tsx";
+import CountrySelector from './FormFields/CountrySelector.tsx';
+import { checkPasswordStrength, getPasswordStrengthColor } from '../helpers.ts';
 
 type UncontrolledFormProps = {
-  onClose: () => void
-}
+  onClose: () => void;
+};
 
-const UncontrolledForm: React.FC<UncontrolledFormProps> = ({onClose}: UncontrolledFormProps) => {
+const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
+  onClose,
+}: UncontrolledFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
   const dispatch = useAppDispatch();
-  const {countries} = useAppSelector((state: RootState) => state.countries);
-  const {submitted, loading, error} = useAppSelector((state: RootState) => state.form);
+  const { countries } = useAppSelector((state: RootState) => state.countries);
+  const { submitted, loading, error } = useAppSelector(
+    (state: RootState) => state.form
+  );
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [passwordStrength, setPasswordStrength] = useState<string>('');
-
-  useEffect(() => {
-    dispatch(fetchCountries());
-  }, [dispatch]);
 
   useEffect(() => {
     if (submitted) {
@@ -34,23 +34,6 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({onClose}: Uncontroll
       setPasswordStrength('');
     }
   }, [submitted]);
-
-  const checkPasswordStrength = (password: string): string => {
-    const hasNumber = /[0-9]/.test(password);
-    const hasUpper = /[A-Z]/.test(password);
-    const hasLower = /[a-z]/.test(password);
-    const hasSpecial = /[^A-Za-z0-9]/.test(password);
-    const length = password.length;
-
-    const strength = [hasNumber, hasUpper, hasLower, hasSpecial].filter(Boolean).length;
-
-    if (length === 0) return '';
-    if (length < 8) return 'Too short';
-    if (strength === 1) return 'Very weak';
-    if (strength === 2) return 'Weak';
-    if (strength === 3) return 'Medium';
-    return 'Strong';
-  };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPasswordStrength(checkPasswordStrength(e.target.value));
@@ -71,18 +54,20 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({onClose}: Uncontroll
       gender: formData.get('gender') as string,
       acceptTerms: formData.get('acceptTerms') === 'on',
       picture: formData.get('picture') as File,
-      country: formData.get('country') as string
+      country: formData.get('country') as string,
     };
 
     try {
-      const validatedData = formInputSchema.parse(formValues) as FormData;
+      const validatedData = formInputSchema(
+        countries.map((country) => country.name)
+      ).parse(formValues) as FormData;
       setErrors({});
 
       dispatch(submitFormData(validatedData)).then(onClose);
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: Record<string, string> = {};
-        error.issues.forEach(issue => {
+        error.issues.forEach((issue) => {
           if (issue.path && issue.path.length > 0) {
             const fieldName = String(issue.path[0]);
             newErrors[fieldName] = issue.message;
@@ -100,21 +85,6 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({onClose}: Uncontroll
     setErrors({});
     setPasswordStrength('');
     dispatch(resetForm());
-  };
-
-  const getPasswordStrengthColor = () => {
-    switch (passwordStrength) {
-      case 'Very weak':
-        return 'red';
-      case 'Weak':
-        return 'orange';
-      case 'Medium':
-        return 'yellow';
-      case 'Strong':
-        return 'green';
-      default:
-        return 'gray';
-    }
   };
 
   return (
@@ -166,12 +136,15 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({onClose}: Uncontroll
         />
         {passwordStrength && (
           <div className="password-strength">
-            Strength: <span style={{color: getPasswordStrengthColor()}}>
+            Strength:{' '}
+            <span style={{ color: getPasswordStrengthColor(passwordStrength) }}>
               {passwordStrength}
             </span>
           </div>
         )}
-        {errors.password && <span className="error-message">{errors.password}</span>}
+        {errors.password && (
+          <span className="error-message">{errors.password}</span>
+        )}
       </div>
 
       <div className="form-group">
@@ -191,25 +164,31 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({onClose}: Uncontroll
         <label>Gender:</label>
         <div className="radio-group">
           <label htmlFor="male">
-            <input type="radio" id="male" name="gender" value="male"/>
+            <input type="radio" id="male" name="gender" value="male" />
             Male
           </label>
           <label htmlFor="female">
-            <input type="radio" id="female" name="gender" value="female"/>
+            <input type="radio" id="female" name="gender" value="female" />
             Female
           </label>
           <label htmlFor="other">
-            <input type="radio" id="other" name="gender" value="other"/>
+            <input type="radio" id="other" name="gender" value="other" />
             Other
           </label>
         </div>
-        {errors.gender && <span className="error-message">{errors.gender}</span>}
+        {errors.gender && (
+          <span className="error-message">{errors.gender}</span>
+        )}
       </div>
 
-      <CountrySelector items={countries} loading={loading} error={errors.country}/>
+      <CountrySelector
+        items={countries}
+        loading={loading}
+        error={errors.country}
+      />
 
       <div className="form-group">
-        <label htmlFor="picture">Profile Picture:</label>
+        <label htmlFor="picture">Picture:</label>
         <input
           type="file"
           id="picture"
@@ -217,7 +196,9 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({onClose}: Uncontroll
           accept=".jpg,.jpeg,.png"
           className={errors.picture ? 'error' : ''}
         />
-        {errors.picture && <span className="error-message">{errors.picture}</span>}
+        {errors.picture && (
+          <span className="error-message">{errors.picture}</span>
+        )}
       </div>
 
       <div className="form-group">
