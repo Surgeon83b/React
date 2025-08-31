@@ -102,7 +102,6 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-/* Адаптивность контролов */
 @media (max-width: 768px) {
   .controls {
     flex-direction: column;

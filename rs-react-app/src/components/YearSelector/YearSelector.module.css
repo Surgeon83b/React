@@ -100,7 +100,6 @@
   padding: 0.5rem;
 }
 
-/* Анимация изменения года */
 @keyframes yearChange {
   0% {
     transform: scale(1);
@@ -117,7 +116,6 @@
   animation: yearChange 0.3s ease;
 }
 
-/* Адаптивность */
 @media (max-width: 768px) {
   .yearSelector {
     min-width: 120px;
@@ -168,7 +166,6 @@
   }
 }
 
-/* Темная тема */
 @media (prefers-color-scheme: dark) {
   .label {
     color: #e2e8f0;

@@ -1,98 +1,115 @@
-import React, {Suspense, useState, useMemo, useCallback} from 'react';
-import {useCountriesData} from './hooks/useCountriesData';
-import {YearSelector} from './components/YearSelector/YearSelector';
-import {SearchBar} from './components/SearchBar/SearchBar';
-import {FilterDropdown} from './components/FilterDropdown/FilterDropdown';
-import {SortButton} from './components/SortButton/SortButton';
-import {CountryCard} from './components/CountryCard/CountryCard';
-import {Modal} from './components/Modal/Modal';
-import {SkeletonLoader} from './components/SkeletonLoader/SkeletonLoader';
-import {ProgressIndicator} from './components/ProgressIndicator/ProgressIndicator';
-import type {CountryData, DataField} from './utils/types';
-import {useColumnSelection} from "./hooks/useColumnSelection";
-import './App.css';
-import styles from './components/SortButton/SortButton.module.css';
-import {useDebounce} from "./hooks/useDebounce.ts";
+import React, { Suspense, useState, useMemo, useCallback } from "react";
+import { useCountriesData } from "./hooks/useCountriesData";
+import { YearSelector } from "./components/YearSelector/YearSelector";
+import { SearchBar } from "./components/SearchBar/SearchBar";
+import { FilterDropdown } from "./components/FilterDropdown/FilterDropdown";
+import { SortButton } from "./components/SortButton/SortButton";
+import { CountryCard } from "./components/CountryCard/CountryCard";
+import { Modal } from "./components/Modal/Modal";
+import { ProgressIndicator } from "./components/ProgressIndicator/ProgressIndicator";
+import type { CountryData, DataField } from "./utils/types";
+import { useColumnSelection } from "./hooks/useColumnSelection";
+import "./App.css";
+import styles from "./components/SortButton/SortButton.module.css";
+import { useDebounce } from "./hooks/useDebounce.ts";
+import { SkeletonLoader } from "./components/SkeletonLoader/SkeletonLoader.tsx";
 
-const CountryList = React.memo(({
-                                  countries,
-                                  selectedYear,
-                                  visibleColumns
-                                }: {
-  countries: CountryData[];
-  selectedYear: number;
-  visibleColumns: DataField[];
-}) => {
-  if (countries.length === 0) {
+const CountryList = React.memo(
+  ({
+    countries,
+    selectedYear,
+    visibleColumns,
+  }: {
+    countries: CountryData[];
+    selectedYear: number;
+    visibleColumns: DataField[];
+  }) => {
+    if (countries.length === 0) {
+      return (
+        <div className="no-data">
+          <h3>No countries found</h3>
+          <p>Try adjusting your search or filter criteria</p>
+        </div>
+      );
+    }
+
     return (
-      <div className="no-data">
-        <h3>No countries found</h3>
-        <p>Try adjusting your search or filter criteria</p>
+      <div className="country-list">
+        {countries.map((country) => (
+          <CountryCard
+            key={country.name}
+            country={country}
+            selectedYear={selectedYear}
+            visibleColumns={visibleColumns}
+          />
+        ))}
       </div>
     );
-  }
+  },
+);
 
-  return (
-    <div className="country-list">
-      {countries.map(country => (
-        <CountryCard
-          key={country.name}
-          country={country}
-          selectedYear={selectedYear}
-          visibleColumns={visibleColumns}
-        />
-      ))}
-    </div>
-  );
-});
-
-CountryList.displayName = 'CountryList';
+CountryList.displayName = "CountryList";
 
 function App() {
-  const {data, isLoading, error, getRegions, availableYears, progress, stage} = useCountriesData();
+  const {
+    data,
+    isLoading,
+    error,
+    getRegions,
+    availableYears,
+    progress,
+    stage,
+  } = useCountriesData();
   const [selectedYear, setSelectedYear] = useState<number>(2020);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedRegion, setSelectedRegion] = useState<string>('');
-  const [sortBy, setSortBy] = useState<'name' | 'population'>('name');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedRegion, setSelectedRegion] = useState<string>("");
+  const [sortBy, setSortBy] = useState<"name" | "population">("name");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const {visibleColumns, toggleColumn} = useColumnSelection();
+  const { visibleColumns, toggleColumn } = useColumnSelection();
   const debouncedSearch = useDebounce(searchQuery);
 
   const filteredCountries = useMemo(() => {
-    return Array.from(data.values()).filter(country => {
-      const matchesSearch = country.name.toLowerCase().includes(debouncedSearch.toLowerCase());
-      const matchesRegion = !selectedRegion || (country.continent && country.continent === selectedRegion);
+    return Array.from(data.values()).filter((country) => {
+      const matchesSearch = country.name
+        .toLowerCase()
+        .includes(debouncedSearch.toLowerCase());
+      const matchesRegion =
+        !selectedRegion ||
+        (country.continent && country.continent === selectedRegion);
       return matchesSearch && matchesRegion;
     });
   }, [data, debouncedSearch, selectedRegion]);
 
   const sortedCountries = useMemo(() => {
     return [...filteredCountries].sort((a, b) => {
-      const aData = a.data.find(d => d.year === selectedYear);
-      const bData = b.data.find(d => d.year === selectedYear);
+      const aData = a.data.find((d) => d.year === selectedYear);
+      const bData = b.data.find((d) => d.year === selectedYear);
 
-      if (sortBy === 'name') {
-        return sortOrder === 'asc'
+      if (sortBy === "name") {
+        return sortOrder === "asc"
           ? a.name.localeCompare(b.name)
           : b.name.localeCompare(a.name);
       } else {
         const aValue = aData?.population ?? 0;
         const bValue = bData?.population ?? 0;
-        return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+        return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
       }
     });
   }, [filteredCountries, selectedYear, sortBy, sortOrder]);
 
-  const handleSortChange = useCallback((newSortBy: 'name' | 'population') => {
-    if (newSortBy === sortBy) {
-      setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortBy(newSortBy);
-      setSortOrder('asc');
-    }
-  }, [sortBy]);
+  const handleSortChange = useCallback(
+    (newSortBy: "name" | "population") => {
+      if (newSortBy === sortBy) {
+        setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+      } else {
+        setSortBy(newSortBy);
+        setSortOrder("asc");
+      }
+    },
+    [sortBy],
+  );
 
   if (error) {
     return (
@@ -135,15 +152,15 @@ function App() {
             <div className="sort-buttons">
               <SortButton
                 label="Sort by Name"
-                isActive={sortBy === 'name'}
+                isActive={sortBy === "name"}
                 sortOrder={sortOrder}
-                onClick={() => handleSortChange('name')}
+                onClick={() => handleSortChange("name")}
               />
               <SortButton
                 label="Sort by Population"
-                isActive={sortBy === 'population'}
+                isActive={sortBy === "population"}
                 sortOrder={sortOrder}
-                onClick={() => handleSortChange('population')}
+                onClick={() => handleSortChange("population")}
               />
             </div>
 
@@ -155,7 +172,7 @@ function App() {
             </button>
           </div>
 
-          <Suspense fallback={<SkeletonLoader/>}>
+          <Suspense fallback={<SkeletonLoader />}>
             <CountryList
               countries={sortedCountries}
               selectedYear={selectedYear}

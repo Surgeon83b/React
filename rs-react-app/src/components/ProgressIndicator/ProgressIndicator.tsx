@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from './ProgressIndicator.module.css';
+import React from "react";
+import styles from "./ProgressIndicator.module.css";
 
 interface ProgressIndicatorProps {
   progress: number;
@@ -8,22 +8,22 @@ interface ProgressIndicatorProps {
 }
 
 export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
-                                                                      progress,
-                                                                      isLoading,
-                                                                      stage = 'processing'
-                                                                    }) => {
+  progress,
+  isLoading,
+  stage = "processing",
+}) => {
   if (!isLoading) return null;
 
   const getStageText = () => {
     switch (stage) {
-      case 'downloading':
-        return 'Downloading data...';
-      case 'parsing':
-        return 'Processing data...';
-      case 'complete':
-        return 'Finalizing...';
+      case "downloading":
+        return "Downloading data...";
+      case "parsing":
+        return "Processing data...";
+      case "complete":
+        return "Finalizing...";
       default:
-        return 'Loading data...';
+        return "Loading data...";
     }
   };
 
@@ -45,9 +45,7 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
         <div className={styles.progressText}>
           {getStageText()} {Math.round(progress)}%
         </div>
-        <div className={styles.stageText}>
-          Stage: {stage}
-        </div>
+        <div className={styles.stageText}>Stage: {stage}</div>
       </div>
 
       <div className={styles.progressNote}>
