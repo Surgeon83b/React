@@ -1,0 +1,201 @@
+.yearSelector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 140px;
+}
+
+.label {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 0.25rem;
+  transition: all 0.2s ease;
+}
+
+.controls:focus-within {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.select {
+  flex: 1;
+  border: none;
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #2c3e50;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23333'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 16px;
+  padding-right: 2rem;
+}
+
+.select:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.navButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f8f9fa;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #2c3e50;
+}
+
+.navButton:hover:not(:disabled) {
+  background: #e9ecef;
+  color: #2980b9;
+}
+
+.navButton:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.navButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.navIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.yearInfo {
+  display: flex;
+  justify-content: center;
+}
+
+.yearRange {
+  font-size: 0.75rem;
+  color: #7f8c8d;
+  font-weight: 500;
+}
+
+.noYears {
+  color: #95a5a6;
+  font-style: italic;
+  padding: 0.5rem;
+}
+
+@keyframes yearChange {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.yearChanged {
+  animation: yearChange 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .yearSelector {
+    min-width: 120px;
+  }
+
+  .select {
+    font-size: 0.9rem;
+    padding: 0.4rem;
+    padding-right: 1.8rem;
+    background-size: 14px;
+  }
+
+  .navButton {
+    width: 28px;
+    height: 28px;
+  }
+
+  .navIcon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .label {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .controls {
+    gap: 0.25rem;
+    padding: 0.2rem;
+  }
+
+  .select {
+    font-size: 0.85rem;
+    padding: 0.3rem;
+    padding-right: 1.6rem;
+  }
+
+  .navButton {
+    width: 24px;
+    height: 24px;
+  }
+
+  .navIcon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .label {
+    color: #e2e8f0;
+  }
+
+  .controls {
+    background: #2d3748;
+    border-color: #4a5568;
+  }
+
+  .select {
+    color: #e2e8f0;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e2e8f0'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  }
+
+  .navButton {
+    background: #4a5568;
+    color: #e2e8f0;
+  }
+
+  .navButton:hover:not(:disabled) {
+    background: #3182ce;
+    color: white;
+  }
+
+  .yearRange {
+    color: #a0aec0;
+  }
+
+  .noYears {
+    color: #718096;
+  }
+}
