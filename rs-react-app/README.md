@@ -1,5 +1,7 @@
 # React Optimization
 
+## Before optimization
 
-!flame_columns_before.png
+
+![Flame Graph for sorting](./public/images/flame_columns_before.png)
 
