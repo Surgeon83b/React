@@ -1,0 +1,85 @@
+.country-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  height: fit-content;
+}
+
+.country-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.country-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.country-name {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.country-iso {
+  background: #3498db;
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.country-continent {
+  background: #ecf0f1;
+  color: #7f8c8d;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.country-population {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.population-label {
+  font-weight: 500;
+  color: #555;
+}
+
+.population-value {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.country-data-table {
+  margin-top: 1rem;
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+  .country-card {
+    padding: 0.75rem;
+  }
+
+  .country-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .country-name {
+    font-size: 1rem;
+  }
+}

@@ -1,0 +1,227 @@
+.dataTable {
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.empty {
+  padding: 2rem;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+.tableContainer {
+  overflow-x: auto;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 600px;
+}
+
+/* Header styles */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  color: white;
+}
+
+.yearHeader {
+  padding: 1rem 0.75rem;
+  font-weight: 600;
+  text-align: left;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 80px;
+}
+
+.columnHeader {
+  padding: 1rem 0.75rem;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.columnHeader:last-child {
+  border-right: none;
+}
+
+/* Body styles */
+.body {
+  background: white;
+}
+
+.row {
+  border-bottom: 1px solid #eaeaea;
+  transition: all 0.2s ease;
+}
+
+.row:hover {
+  background-color: #f8f9fa;
+}
+
+.clickableRow {
+  cursor: pointer;
+}
+
+.clickableRow:hover {
+  background-color: #e3f2fd;
+  transform: translateX(2px);
+}
+
+.selectedRow {
+  background-color: #e3f2fd !important;
+  border-left: 4px solid #2196f3;
+  font-weight: 500;
+}
+
+/* Cell styles */
+.yearCell {
+  padding: 0.75rem;
+  font-weight: 600;
+  color: #2c3e50;
+  background: #fafafa;
+  border-right: 1px solid #eaeaea;
+  text-align: left;
+}
+
+.dataCell {
+  padding: 0.75rem;
+  text-align: right;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.85rem;
+  color: #2c3e50;
+  border-right: 1px solid #eaeaea;
+  white-space: nowrap;
+}
+
+.dataCell:last-child {
+  border-right: none;
+}
+
+/* Highlight animation for updated data */
+@keyframes highlight {
+  0% {
+    background-color: #fffde7;
+  }
+  50% {
+    background-color: #fff9c4;
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.highlight {
+  animation: highlight 1s ease;
+}
+
+/* Scrollbar styling */
+.tableContainer::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.tableContainer::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.tableContainer::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.tableContainer::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .table {
+    font-size: 0.8rem;
+  }
+
+  .yearHeader,
+  .columnHeader {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .yearCell,
+  .dataCell {
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dataTable {
+    border-radius: 6px;
+  }
+
+  .table {
+    font-size: 0.75rem;
+    min-width: 500px;
+  }
+
+  .yearHeader,
+  .columnHeader {
+    padding: 0.5rem 0.375rem;
+    font-size: 0.75rem;
+  }
+
+  .yearCell,
+  .dataCell {
+    padding: 0.375rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .dataTable {
+    background: #2d3748;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .body {
+    background: #2d3748;
+    color: #e2e8f0;
+  }
+
+  .row {
+    border-bottom-color: #4a5568;
+  }
+
+  .row:hover {
+    background-color: #4a5568;
+  }
+
+  .clickableRow:hover {
+    background-color: #3182ce;
+  }
+
+  .selectedRow {
+    background-color: #3182ce !important;
+    border-left-color: #63b3ed;
+  }
+
+  .yearCell {
+    background: #4a5568;
+    color: #e2e8f0;
+    border-right-color: #4a5568;
+  }
+
+  .dataCell {
+    color: #e2e8f0;
+    border-right-color: #4a5568;
+  }
+}

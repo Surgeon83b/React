@@ -1,0 +1,21 @@
+.sortButton {
+  padding: 10px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  color: #6b7280;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sortButton:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.sortButton.active {
+  border-color: #3b82f6;
+  background-color: #3b82f6;
+  color: white;
+}
