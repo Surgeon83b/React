@@ -1,6 +1,6 @@
 # React Optimization
 
-**Sorting**
+** Sorting **
 
 Flame Graph
 Before optimization
@@ -14,7 +14,7 @@ Before optimization
 After optimization
 ![Ranked Chart for sorting](./public/imges/ranked_sort_after.png)
 
-**Change Columns**
+** Change Columns **
 
 Flame Graph
 Before optimization
@@ -27,3 +27,31 @@ Before optimization
 ![Ranked Chart for columns](./public/imges/ranked_columns_before.png)
 After optimization
 ![Ranked Chart for columns](./public/imges/ranked_columns_after.png)
+
+** Year Selection **
+
+Flame Graph
+Before optimization
+![Flame Graph for year](./public/imges/flame_year_before.png)
+After optimization
+![Flame Graph for year](./public/imges/flame_year_after.png)
+
+Ranked Chart
+Before optimization
+![Ranked Chart for year](./public/imges/ranked_year_before.png)
+After optimization
+![Ranked Chart for year](./public/imges/ranked_year_after.png)
+
+** Search **
+
+Flame Graph
+Before optimization
+![Flame Graph for search](./public/imges/flame_search_before.png)
+After optimization
+![Flame Graph for search](./public/imges/flame_search_after.png)
+
+Ranked Chart
+Before optimization
+![Ranked Chart for search](./public/imges/ranked_search_before.png)
+After optimization
+![Ranked Chart for search](./public/imges/ranked_search_after.png)
