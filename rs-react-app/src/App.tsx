@@ -12,6 +12,7 @@ import type {CountryData, DataField} from './utils/types';
 import {useColumnSelection} from "./hooks/useColumnSelection";
 import './App.css';
 import styles from './components/SortButton/SortButton.module.css';
+import {useDebounce} from "./hooks/useDebounce.ts";
 
 const CountryList = React.memo(({
                                   countries,
@@ -57,14 +58,15 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {visibleColumns, toggleColumn} = useColumnSelection();
+  const debouncedSearch = useDebounce(searchQuery);
 
   const filteredCountries = useMemo(() => {
     return Array.from(data.values()).filter(country => {
-      const matchesSearch = country.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = country.name.toLowerCase().includes(debouncedSearch.toLowerCase());
       const matchesRegion = !selectedRegion || (country.continent && country.continent === selectedRegion);
       return matchesSearch && matchesRegion;
     });
-  }, [data, searchQuery, selectedRegion]);
+  }, [data, debouncedSearch, selectedRegion]);
 
   const sortedCountries = useMemo(() => {
     return [...filteredCountries].sort((a, b) => {
@@ -119,7 +121,7 @@ function App() {
               years={availableYears}
             />
             <SearchBar
-              value={searchQuery}
+              value={debouncedSearch}
               onChange={setSearchQuery}
               placeholder="Search countries..."
             />
